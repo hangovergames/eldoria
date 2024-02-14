@@ -2,7 +2,7 @@
 
 ## Community
 
-We develop the game at [Discord](https://discord.com/invite/aPZeQv3gWF)
+We develop the game at [Discord](https://discord.com/invite/aPZeQv3gWF) - welcome to participate!
 
 ## Objective
 
