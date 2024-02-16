@@ -1,6 +1,11 @@
 .PHONY: build clean tidy
 
 ELDORIA_SOURCES := \
+    ./internal/api/index.go \
+    ./internal/apiRequests/request.go \
+    ./internal/apiResponses/json.go \
+    ./internal/apiResponses/response.go \
+    ./internal/server/server.go \
     ./cmd/eldoria-server/main.go
 
 all: build
