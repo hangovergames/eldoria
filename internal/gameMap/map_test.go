@@ -14,7 +14,7 @@ func TestNewGameMap(t *testing.T) {
 	}
 	for _, row := range gm.Tiles {
 		for _, tile := range row {
-			if tile != DeepOcean {
+			if tile.Type != DeepOcean {
 				t.Errorf("NewGameMap default tile incorrect, expected: 0, got: %d", tile)
 			}
 		}
@@ -29,12 +29,12 @@ func TestGetSetTile(t *testing.T) {
 	if err != nil {
 		t.Fatalf("SetTile returned an error: %v", err)
 	}
-	tileID, err := gm.GetTile(3, 2)
+	tile, err := gm.GetTile(3, 2)
 	if err != nil {
 		t.Fatalf("GetTile returned an error: %v", err)
 	}
-	if tileID != Grassland {
-		t.Errorf("Expected tile ID 1, got: %d", tileID)
+	if tile.Type != Grassland {
+		t.Errorf("Expected tile type Grassland, got: %d", tile.Type)
 	}
 
 	// Test out of bounds
@@ -52,10 +52,10 @@ func TestGetTilesInArea(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetTilesInArea returned an error: %v", err)
 	}
-	expected := [][]TileType{
-		{DeepOcean, DeepOcean, DeepOcean},
-		{DeepOcean, Grassland, DeepOcean},
-		{DeepOcean, DeepOcean, DeepOcean},
+	expected := [][]Tile{
+		{NewTile(DeepOcean), NewTile(DeepOcean), NewTile(DeepOcean)},
+		{NewTile(DeepOcean), NewTile(Grassland), NewTile(DeepOcean)},
+		{NewTile(DeepOcean), NewTile(DeepOcean), NewTile(DeepOcean)},
 	}
 	if !reflect.DeepEqual(area, expected) {
 		t.Errorf("Expected area to be %+v, got %+v", expected, area)

@@ -5,16 +5,16 @@ package gameMap
 import "fmt"
 
 type GameMap struct {
-	Tiles         [][]TileType // 2D slice of tile IDs
+	Tiles         [][]Tile
 	Width, Height int
 }
 
-func NewGameMap(width, height int, defaultTile TileType) *GameMap {
-	tiles := make([][]TileType, height)
+func NewGameMap(width, height int, defaultTileType TileType, modifiers ...ModifierType) *GameMap {
+	tiles := make([][]Tile, height)
 	for i := range tiles {
-		tiles[i] = make([]TileType, width)
+		tiles[i] = make([]Tile, width)
 		for j := range tiles[i] {
-			tiles[i][j] = defaultTile
+			tiles[i][j] = NewTile(defaultTileType, modifiers...)
 		}
 	}
 	return &GameMap{
@@ -25,24 +25,24 @@ func NewGameMap(width, height int, defaultTile TileType) *GameMap {
 }
 
 // GetTile returns the ID of the tile at the given coordinates.
-func (gm *GameMap) GetTile(x, y int) (TileType, error) {
+func (gm *GameMap) GetTile(x, y int) (Tile, error) {
 	if x < 0 || y < 0 || x >= gm.Width || y >= gm.Height {
-		return 0, fmt.Errorf("coordinates out of bounds")
+		return NewTile(UnknownTileType), fmt.Errorf("coordinates out of bounds")
 	}
 	return gm.Tiles[y][x], nil
 }
 
 // SetTile sets the ID of the tile at the given coordinates.
-func (gm *GameMap) SetTile(x, y int, tileID TileType) error {
+func (gm *GameMap) SetTile(x, y int, tileID TileType, modifiers ...ModifierType) error {
 	if x < 0 || y < 0 || x >= gm.Width || y >= gm.Height {
 		return fmt.Errorf("coordinates out of bounds")
 	}
-	gm.Tiles[y][x] = tileID
+	gm.Tiles[y][x] = NewTile(tileID, modifiers...)
 	return nil
 }
 
 // GetTilesInArea returns a 2D slice of tile IDs within the specified rectangular area.
-func (gm *GameMap) GetTilesInArea(x, y, x2, y2 int) ([][]TileType, error) {
+func (gm *GameMap) GetTilesInArea(x, y, x2, y2 int) ([][]Tile, error) {
 
 	// Validate coordinates
 	if x < 0 || y < 0 || x2 >= gm.Width || y2 >= gm.Height || x > x2 || y > y2 {
@@ -54,9 +54,9 @@ func (gm *GameMap) GetTilesInArea(x, y, x2, y2 int) ([][]TileType, error) {
 	height := y2 - y + 1
 
 	// Initialize the slice to hold the tiles
-	areaTiles := make([][]TileType, height)
+	areaTiles := make([][]Tile, height)
 	for i := range areaTiles {
-		areaTiles[i] = make([]TileType, width)
+		areaTiles[i] = make([]Tile, width)
 	}
 
 	// Populate the slice with tile IDs
