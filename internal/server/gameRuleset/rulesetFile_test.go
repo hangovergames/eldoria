@@ -1,9 +1,9 @@
 // Copyright (c) 2024. Hangover Games <info@hangover.games>. All rights reserved.
 
-package ruleset
+package gameRuleset
 
 import (
-	"github.com/hangovergames/eldoria/internal/testutils"
+	"github.com/hangovergames/eldoria/internal/common/testutils"
 	"testing"
 )
 
@@ -21,13 +21,13 @@ effects:
 	filename, cleanup := testutils.CreateTempYAMLFile(t, content)
 	defer cleanup()
 
-	// Attempt to load the ruleset
+	// Attempt to load the gameRuleset
 	ruleset, err := LoadRulesetFile(filename)
 	if err != nil {
 		t.Errorf("Ruleset failed to load")
 	}
 
-	// Verify the content of the loaded ruleset
+	// Verify the content of the loaded gameRuleset
 	if len(ruleset.Tiles) != 2 || len(ruleset.Modifiers) != 1 || len(ruleset.Effects) != 1 {
 		t.Errorf("Ruleset content did not match expected values")
 	}

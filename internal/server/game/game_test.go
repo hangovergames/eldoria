@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/hangovergames/eldoria/internal/gameMap"
+	"github.com/hangovergames/eldoria/internal/server/gameMap"
 )
 
 func TestNewGameMap(t *testing.T) {

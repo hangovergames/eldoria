@@ -1,6 +1,6 @@
 // Copyright (c) 2024. Hangover Games <info@hangover.games>. All rights reserved.
 
-package server
+package gameServer
 
 import (
 	"net/http"
@@ -14,17 +14,17 @@ func TestServer_Start(t *testing.T) {
 	s := NewServer(":8080")
 	go func() {
 		if err := s.Start(); err != nil {
-			t.Errorf("Failed to start server: %v", err)
+			t.Errorf("Failed to start gameServer: %v", err)
 		}
 	}()
 
-	// Wait a moment for the server to start
+	// Wait a moment for the gameServer to start
 	time.Sleep(time.Second)
 
-	// Make a request to verify the server is responding
+	// Make a request to verify the gameServer is responding
 	res, err := http.Get("http://" + s.Address)
 	if err != nil {
-		t.Fatalf("Failed to make request to server: %v", err)
+		t.Fatalf("Failed to make request to gameServer: %v", err)
 	}
 	defer res.Body.Close()
 
@@ -33,7 +33,7 @@ func TestServer_Start(t *testing.T) {
 		t.Errorf("Expected status code 200, got %d", res.StatusCode)
 	}
 
-	// Additional checks can be added here to verify the server's behavior
+	// Additional checks can be added here to verify the gameServer's behavior
 
 }
 
@@ -41,11 +41,11 @@ func TestResponseHandler(t *testing.T) {
 	mh := &mockHandler{}
 	handler := responseHandler(mh.Serve)
 
-	// Create a test server with the handler.
+	// Create a test gameServer with the handler.
 	ts := httptest.NewServer(handler)
 	defer ts.Close()
 
-	// Make a request to the test server.
+	// Make a request to the test gameServer.
 	res, err := http.Get(ts.URL)
 	if err != nil {
 		t.Fatalf("Failed to make request: %v", err)

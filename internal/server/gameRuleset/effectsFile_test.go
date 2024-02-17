@@ -1,9 +1,9 @@
 // Copyright (c) 2024. Hangover Games <info@hangover.games>. All rights reserved.
 
-package ruleset
+package gameRuleset
 
 import (
-	"github.com/hangovergames/eldoria/internal/testutils"
+	"github.com/hangovergames/eldoria/internal/common/testutils"
 	"reflect"
 	"testing"
 )

@@ -2,12 +2,12 @@ version: '3.8'
 
 services:
 
-  eldoria:
+  eldoria-server:
     build: .
-    container_name: eldoria
+    container_name: eldoria-server
     ports:
     - "8080:8080"
     restart: unless-stopped
     environment:
     - ELDORIA_TARGET=http://localhost:3000
-    - ELDORIA_PORT=8080
+    - PORT=8080

@@ -3,8 +3,8 @@
 package index
 
 import (
-	"github.com/hangovergames/eldoria/internal/apiRequests"
-	"github.com/hangovergames/eldoria/internal/apiResponses"
+	"github.com/hangovergames/eldoria/internal/server/apiRequests"
+	"github.com/hangovergames/eldoria/internal/server/apiResponses"
 	"net/http"
 )
 

@@ -1,10 +1,10 @@
 // Copyright (c) 2024. Hangover Games <info@hangover.games>. All rights reserved.
 
-package server
+package gameServer
 
 import (
-	"github.com/hangovergames/eldoria/internal/apiRequests"
-	"github.com/hangovergames/eldoria/internal/apiResponses"
+	"github.com/hangovergames/eldoria/internal/server/apiRequests"
+	"github.com/hangovergames/eldoria/internal/server/apiResponses"
 )
 
 // mockHandler is a test utility that implements the HandlerFunc signature.

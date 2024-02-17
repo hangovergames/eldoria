@@ -3,8 +3,8 @@
 package game
 
 import (
-	"github.com/hangovergames/eldoria/internal/gameMap"
-	"github.com/hangovergames/eldoria/internal/gamePlayer"
+	"github.com/hangovergames/eldoria/internal/server/gameMap"
+	"github.com/hangovergames/eldoria/internal/server/gamePlayer"
 )
 
 type Game struct {

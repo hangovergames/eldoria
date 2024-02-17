@@ -4,7 +4,7 @@ package main
 
 import (
 	"fmt"
-	server2 "github.com/hangovergames/eldoria/internal/server"
+	server2 "github.com/hangovergames/eldoria/internal/server/gameServer"
 	"log"
 )
 
@@ -12,7 +12,7 @@ const PORT = "8080"
 
 func main() {
 
-	// Start the HTTP server.
+	// Start the HTTP gameServer.
 	address := fmt.Sprintf(":%s", PORT)
 
 	server := server2.NewServer(address)

@@ -1,10 +1,10 @@
 // Copyright (c) 2024. Hangover Games <info@hangover.games>. All rights reserved.
 
-package ruleset
+package gameRuleset
 
 import (
-	"github.com/hangovergames/eldoria/internal/gameMap"
-	"github.com/hangovergames/eldoria/internal/testutils"
+	"github.com/hangovergames/eldoria/internal/common/testutils"
+	"github.com/hangovergames/eldoria/internal/server/gameMap"
 	"testing"
 )
 
@@ -13,7 +13,7 @@ func TestLoadRuleset(t *testing.T) {
 	dirPath, cleanupDir := testutils.CreateTempDir(t)
 	defer cleanupDir()
 
-	// Create ruleset.yml
+	// Create gameRuleset.yml
 	rulesetContent := `tiles:
 - Unknown
 - ShallowOcean
@@ -27,7 +27,7 @@ effects:
 - SupportsNavalUnits
 - Passable
 `
-	_, cleanupFile := testutils.CreateFileInDir(t, dirPath, "ruleset.yml", rulesetContent)
+	_, cleanupFile := testutils.CreateFileInDir(t, dirPath, "gameRuleset.yml", rulesetContent)
 	defer cleanupFile()
 
 	// Create tiles.yml
@@ -95,7 +95,7 @@ effects:
 
 func TestRuleset_FindTileType(t *testing.T) {
 
-	// Setup a test ruleset
+	// Setup a test gameRuleset
 	ruleset := Ruleset{
 		EnabledTiles: []string{"Grassland", "Forest", "Mountain"},
 	}
@@ -144,7 +144,7 @@ func TestRuleset_FindTileType(t *testing.T) {
 }
 
 func TestRuleset_FindModifierType(t *testing.T) {
-	// Setup a test ruleset with known modifiers
+	// Setup a test gameRuleset with known modifiers
 	ruleset := Ruleset{
 		EnabledModifiers: []string{"River", "Road", "MountainPass"},
 	}

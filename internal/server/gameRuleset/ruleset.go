@@ -1,10 +1,10 @@
 // Copyright (c) 2024. Hangover Games <info@hangover.games>. All rights reserved.
 
-package ruleset
+package gameRuleset
 
 import (
 	"fmt"
-	"github.com/hangovergames/eldoria/internal/gameMap"
+	"github.com/hangovergames/eldoria/internal/server/gameMap"
 	"path/filepath"
 )
 
@@ -20,11 +20,11 @@ type Ruleset struct {
 // LoadRuleset combines loading of RulesetFile and TilesFile into a single Ruleset struct.
 func LoadRuleset(rulesetPath string) (Ruleset, error) {
 
-	// Load the basic ruleset
-	rulesetFilePath := filepath.Join(rulesetPath, "ruleset.yml")
+	// Load the basic gameRuleset
+	rulesetFilePath := filepath.Join(rulesetPath, "gameRuleset.yml")
 	rulesetFile, err := LoadRulesetFile(rulesetFilePath)
 	if err != nil {
-		return Ruleset{}, fmt.Errorf("failed to load ruleset.yml: %w", err)
+		return Ruleset{}, fmt.Errorf("failed to load gameRuleset.yml: %w", err)
 	}
 
 	// Load tiles

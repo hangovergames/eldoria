@@ -4,7 +4,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o eldoria ./cmd/eldoria
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o eldoria-server ./cmd/eldoria-server
 
 # Final Stage
 FROM alpine:latest
@@ -13,4 +13,4 @@ COPY --from=builder /app/eldoria .
 COPY ./mocks/mock-systemctl.sh /usr/bin/systemctl
 RUN chmod +x /usr/bin/systemctl
 EXPOSE 9500
-CMD ["./eldoria"]
+CMD ["./eldoria-server"]
