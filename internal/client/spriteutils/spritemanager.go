@@ -4,6 +4,13 @@ package spriteutils
 
 import "github.com/hajimehoshi/ebiten/v2"
 
+// ISpriteManager defines the behavior for managing sprites.
+type ISpriteManager interface {
+	GetSprite(name string) *ebiten.Image
+	RegisterSpriteSheet(name string, sheet *SpriteSheet)
+	MapSpriteName(name string, sheetName string, index int)
+}
+
 // SpriteManager manages multiple SpriteSheets and provides an easy way to retrieve sprites by name.
 type SpriteManager struct {
 	sheets  map[string]*SpriteSheet      // Map of sprite sheet names to SpriteSheet instances.
