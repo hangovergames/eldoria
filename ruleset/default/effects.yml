@@ -11,3 +11,13 @@ effects:
     resources:
       any:
         harvestRate: {min: 1, max: 2} # Increases harvest speed rate by 1-2 units per turn.
+
+  Fertile:
+    summary: "Fertile tile"
+    resources:
+      Food:
+        maxAmount: 100
+        harvestRate: {min: 5, max: 10}
+        restorationRate: {min: 1, max: 5}
+        restorationThreshold: 20
+        maxPopulation: 5

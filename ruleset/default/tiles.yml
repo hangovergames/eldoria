@@ -1,6 +1,6 @@
 tiles:
   Unknown:
-    summary: Special tile, not known to the player
+    summary: Special tile, not known to the gamePlayer
     effects:
     - BlocksNavalMovement
   DeepOcean:
