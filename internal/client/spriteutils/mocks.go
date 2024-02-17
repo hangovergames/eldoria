@@ -4,6 +4,7 @@ package spriteutils
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hangovergames/eldoria/internal/common/dtos"
 	"image/color"
 )
 
@@ -12,7 +13,9 @@ type MockSpriteManager struct {
 	// Optional: Add a map to store fake or test sprites by name.
 	fakeSprites map[string]*ebiten.Image
 	// Track calls for verification in tests.
-	CalledGetSprite map[string]bool
+	CalledGetSprite            map[string]bool
+	CalledLoadSpriteSheetDTOs  bool
+	CalledLoadSpriteConfigDTOs bool
 }
 
 // NewMockSpriteManager creates a new instance of MockSpriteManager.
@@ -50,4 +53,16 @@ func (sm *MockSpriteManager) RegisterSpriteSheet(name string, sheet *SpriteSheet
 
 func (sm *MockSpriteManager) MapSpriteName(name string, sheetName string, index int) {
 	// Optional: Implement if you need to simulate or track this call.
+}
+
+// Implement the LoadSpriteSheetDTOs method for the MockSpriteManager.
+func (m *MockSpriteManager) LoadSpriteSheetDTOs(spriteSheets []dtos.SpriteSheetDTO) {
+	// Mark that the method was called. No need to implement logic for mocking.
+	m.CalledLoadSpriteSheetDTOs = true
+}
+
+// Implement the LoadSpriteConfigDTOs method for the MockSpriteManager.
+func (m *MockSpriteManager) LoadSpriteConfigDTOs(spriteConfigs []dtos.SpriteConfigDTO) {
+	// Mark that the method was called. No need to implement logic for mocking.
+	m.CalledLoadSpriteConfigDTOs = true
 }

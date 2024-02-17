@@ -14,6 +14,8 @@ type ISpriteManager interface {
 	GetSprite(name string) *ebiten.Image
 	RegisterSpriteSheet(name string, sheet *SpriteSheet)
 	MapSpriteName(name string, sheetName string, index int)
+	LoadSpriteSheetDTOs(spriteSheets []dtos.SpriteSheetDTO)
+	LoadSpriteConfigDTOs(spriteConfigs []dtos.SpriteConfigDTO)
 }
 
 // SpriteManager manages multiple SpriteSheets and provides an easy way to retrieve sprites by name.
@@ -69,5 +71,12 @@ func (sm *SpriteManager) LoadSpriteSheetDTOs(spriteSheets []dtos.SpriteSheetDTO)
 		}
 		sheet := NewSpriteSheet(img, sheetDTO.TileWidth, sheetDTO.TileHeight, sheetDTO.TilesPerRow, sheetDTO.StartX, sheetDTO.StartY)
 		sm.RegisterSpriteSheet(sheetDTO.Name, sheet)
+	}
+}
+
+// LoadSpriteConfigDTOs loads sprite configurations defined in the UIConfigDTO into the SpriteManager.
+func (sm *SpriteManager) LoadSpriteConfigDTOs(spriteConfigs []dtos.SpriteConfigDTO) {
+	for _, config := range spriteConfigs {
+		sm.MapSpriteName(config.Name, config.SheetName, config.Index)
 	}
 }

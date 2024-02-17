@@ -19,6 +19,13 @@ type SpriteSheetDTO struct {
 	StartY      int    `json:"startY"`
 }
 
+// SpriteConfigDTO represents the configuration for mapping sprite names to their sheet and index.
+type SpriteConfigDTO struct {
+	Name      string `json:"name"`
+	SheetName string `json:"sheetName"`
+	Index     int    `json:"index"`
+}
+
 // SpriteDTO represents the configuration for an individual sprite within a tile.
 type SpriteDTO struct {
 	Name    string  `json:"name"`
@@ -34,8 +41,9 @@ type TileConfigDTO struct {
 
 // UIConfigDTO represents the top-level configuration structure.
 type UIConfigDTO struct {
-	SpriteSheets []SpriteSheetDTO `json:"spriteSheets"`
-	TileConfigs  []TileConfigDTO  `json:"tileConfigs"`
+	SpriteSheets  []SpriteSheetDTO  `json:"spriteSheets"`
+	SpriteConfigs []SpriteConfigDTO `json:"spriteConfigs"`
+	TileConfigs   []TileConfigDTO   `json:"tileConfigs"`
 }
 
 func LoadUIConfigDTO(configPath string) UIConfigDTO {

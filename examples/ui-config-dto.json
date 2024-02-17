@@ -19,6 +19,11 @@
       "startY": 210
     }
   ],
+  "spriteConfigs": [
+    {"name": "ShallowOcean", "sheetName":  "OceanTiles", "index": 0},
+    {"name": "DeepOcean", "sheetName":  "OceanTiles", "index": 10},
+    {"name": "Grassland", "sheetName":  "Tiles", "index": 2}
+  ],
   "tileConfigs": [
     {
       "tileName": "DeepOcean",

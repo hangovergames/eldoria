@@ -43,12 +43,8 @@ func init() {
 	imageManager.RegisterImage("freeciv/data/trident/tiles.png", ebiten.NewImageFromImage(img))
 
 	spriteManager := spriteutils.NewSpriteManager(imageManager)
-
 	spriteManager.LoadSpriteSheetDTOs(uiConfig.SpriteSheets)
-
-	spriteManager.MapSpriteName("ShallowOcean", "OceanTiles", 0)
-	spriteManager.MapSpriteName("DeepOcean", "OceanTiles", 10)
-	spriteManager.MapSpriteName("Grassland", "Tiles", 2)
+	spriteManager.LoadSpriteConfigDTOs(uiConfig.SpriteConfigs)
 
 	tileMap := uiMap.NewTileGrid(spriteManager, 10, 10)
 	tileMap.LoadTileConfigDTOs(uiConfig.TileConfigs)
