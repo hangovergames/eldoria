@@ -9,12 +9,16 @@ type GameMap struct {
 	Width, Height int
 }
 
-func NewGameMap(width, height int, defaultTileType TileType, modifiers ...ModifierType) *GameMap {
+func NewGameMap(
+	width,
+	height int,
+	defaultTile Tile,
+) *GameMap {
 	tiles := make([][]Tile, height)
 	for i := range tiles {
 		tiles[i] = make([]Tile, width)
 		for j := range tiles[i] {
-			tiles[i][j] = NewTile(defaultTileType, modifiers...)
+			tiles[i][j] = defaultTile.Clone()
 		}
 	}
 	return &GameMap{
@@ -27,17 +31,17 @@ func NewGameMap(width, height int, defaultTileType TileType, modifiers ...Modifi
 // GetTile returns the ID of the tile at the given coordinates.
 func (gm *GameMap) GetTile(x, y int) (Tile, error) {
 	if x < 0 || y < 0 || x >= gm.Width || y >= gm.Height {
-		return NewTile(UnknownTileType), fmt.Errorf("coordinates out of bounds")
+		return Tile{}, fmt.Errorf("coordinates out of bounds")
 	}
 	return gm.Tiles[y][x], nil
 }
 
 // SetTile sets the ID of the tile at the given coordinates.
-func (gm *GameMap) SetTile(x, y int, tileID TileType, modifiers ...ModifierType) error {
+func (gm *GameMap) SetTile(x, y int, newTile Tile) error {
 	if x < 0 || y < 0 || x >= gm.Width || y >= gm.Height {
 		return fmt.Errorf("coordinates out of bounds")
 	}
-	gm.Tiles[y][x] = NewTile(tileID, modifiers...)
+	gm.Tiles[y][x] = newTile.Clone()
 	return nil
 }
 

@@ -7,6 +7,9 @@ import (
 	"testing"
 )
 
+var DeepOcean Tile = NewTile(0, []ModifierType{}, NoTileEffects)
+var Grassland Tile = NewTile(1, []ModifierType{}, NoTileEffects)
+
 func TestNewGameMap(t *testing.T) {
 	gm := NewGameMap(10, 5, DeepOcean)
 	if gm.Width != 10 || gm.Height != 5 {
@@ -14,7 +17,7 @@ func TestNewGameMap(t *testing.T) {
 	}
 	for _, row := range gm.Tiles {
 		for _, tile := range row {
-			if tile.Type != DeepOcean {
+			if tile.Type != DeepOcean.Type {
 				t.Errorf("NewGameMap default tile incorrect, expected: 0, got: %d", tile)
 			}
 		}
@@ -33,7 +36,7 @@ func TestGetSetTile(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetTile returned an error: %v", err)
 	}
-	if tile.Type != Grassland {
+	if tile.Type != Grassland.Type {
 		t.Errorf("Expected tile type Grassland, got: %d", tile.Type)
 	}
 
@@ -53,9 +56,9 @@ func TestGetTilesInArea(t *testing.T) {
 		t.Fatalf("GetTilesInArea returned an error: %v", err)
 	}
 	expected := [][]Tile{
-		{NewTile(DeepOcean), NewTile(DeepOcean), NewTile(DeepOcean)},
-		{NewTile(DeepOcean), NewTile(Grassland), NewTile(DeepOcean)},
-		{NewTile(DeepOcean), NewTile(DeepOcean), NewTile(DeepOcean)},
+		{DeepOcean, DeepOcean, DeepOcean},
+		{DeepOcean, Grassland, DeepOcean},
+		{DeepOcean, DeepOcean, DeepOcean},
 	}
 	if !reflect.DeepEqual(area, expected) {
 		t.Errorf("Expected area to be %+v, got %+v", expected, area)

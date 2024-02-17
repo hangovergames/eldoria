@@ -1,0 +1,11 @@
+resources:
+  Gold:
+    summary: "Precious metal used for trade and crafting."
+  Wood:
+    summary: "Basic building material."
+  Food:
+    summary: "Essential for survival and growth."
+  Stone:
+    summary: "Used for construction and tools."
+  FreshWater:
+    summary: "Crucial for life and agriculture."

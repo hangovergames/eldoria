@@ -1,0 +1,110 @@
+tiles:
+  Unknown:
+    summary: Special tile, not known to the player
+    effects:
+    - BlocksNavalMovement
+  DeepOcean:
+    summary: Great for impassable or difficult-to-navigate areas.
+    effects:
+    - BlocksNavalMovement
+  ShallowOcean:
+    summary: Could be used for areas that allow for naval passage but perhaps not settlement.
+    effects:
+    - SupportsNavalUnits
+  Lake:
+    summary: Offers fresh water, possibly influencing settlement locations or resource availability.
+    effects:
+    - ProvidesFreshWater
+    - SupportsNavalUnits
+  Desert:
+    summary: Challenging terrain with limited resources, affecting movement and settlement.
+    effects:
+    - ImpedesMovement
+  Swamp:
+    summary: Difficult terrain for movement, could have unique resources or units.
+    effects:
+    - ImpedesMovement
+    - DamagesUnits
+  Plains:
+    summary: Cold, barren lands found in northern regions. Could affect unit movement and settlement negatively but might have unique strategic or resource values.
+    effects:
+    - Fertile
+  Grassland:
+    summary: Ideal for agriculture and settlement, probably the most basic terrain for expansion.
+    effects:
+    - Fertile
+    - Passable
+    resources:
+      Food:
+        maxAmount: 100
+        harvestRate: {min: 5, max: 10}
+        restorationRate: {min: 1, max: 5}
+        restorationThreshold: 20
+        maxPopulation: 5
+  Steppe:
+    summary: Vast, open grasslands with dry conditions, ideal for nomadic lifestyles and fast unit movement, but may offer limited agricultural resources.
+    effects:
+    - Passable
+  Hills:
+    summary: Offers defensive bonuses and possibly mineral resources.
+    effects:
+    - DefensiveBonus
+    - RichInRock
+  Mountain:
+    summary: Impassable or challenging to navigate, but could be rich in resources.
+    effects:
+    - ImpedesMovement
+    - RichInRock
+  Tundra:
+    summary: Cold, barren lands found in northern regions. Could affect unit movement and settlement negatively but might have unique strategic or resource values.
+    effects:
+    - Cold
+  Ice:
+    summary: Similar to mountains in being impassable, representing glaciers or frozen seas that could be navigated only by specific units or under certain conditions.
+    effects:
+    - BlocksNavalMovement
+    - Cold
+  Forest:
+    summary: Provides wood resources, potentially slows down movement.
+    effects:
+    - ImpedesMovement
+    - RichInWood
+  Savannah:
+    summary: Similar to grasslands but with different strategic or resource implications, possibly found in warmer climates.
+    effects:
+    - Fertile
+    - Passable
+  Volcano:
+    summary: A unique terrain type that could offer rich mineral resources but comes with risks, such as periodic eruptions that could damage nearby units or settlements.
+    effects:
+    - DamagesUnits
+    - RichInGold
+  Jungle:
+    summary: Dense and rich in biodiversity, jungles can slow down movement due to thick vegetation but might offer unique resources and hideouts.
+    effects:
+    - ImpedesMovement
+    - RichInWood
+  Beach:
+    summary: Transitional zones between land and water, beaches can facilitate naval landings and tourism, affecting economy and military strategies.
+    effects:
+    - Passable
+    - SupportsNavalUnits
+
+modifiers:
+
+  River:
+    summary: Summary for rivers
+    effects:
+    - EnhancesMovement
+    - ProvidesFreshWater
+
+  Road:
+    summary: Summary for roads
+    effects:
+    - EnhancesMovement
+    - EnhancesHarvest
+
+  CoralReefs:
+    summary: Summary for coral reefs
+    effects:
+    - BlocksNavalMovement

@@ -1,0 +1,12 @@
+tiles:
+- Unknown
+- ShallowOcean
+- Grassland
+modifiers:
+- River
+- Road
+- CoralReefs
+effects:
+- BlocksNavalMovement
+- SupportsNavalUnits
+- Passable
