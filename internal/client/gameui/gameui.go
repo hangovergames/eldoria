@@ -11,13 +11,13 @@ import (
 
 type GameUI struct {
 	ScreenWidth, ScreenHeight int
-	Map                       *uiMap.TileGrid
+	Map                       uiMap.ITileGrid
 }
 
 // NewGameUI creates a new instance of GameUI.
 func NewGameUI(
 	screenWidth, screenHeight int,
-	grid *uiMap.TileGrid,
+	grid uiMap.ITileGrid,
 ) *GameUI {
 	return &GameUI{
 		ScreenWidth:  screenWidth,

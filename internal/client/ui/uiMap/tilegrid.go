@@ -5,7 +5,16 @@ package uiMap
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hangovergames/eldoria/internal/client/spriteutils"
+	"github.com/hangovergames/eldoria/internal/common/dtos"
 )
+
+// ITileGrid defines the interface for a tile grid.
+type ITileGrid interface {
+	Draw(screen *ebiten.Image, tileSizeX, tileSizeY int)
+	SetTile(x, y int, tileName string)
+	GetTile(x, y int) (string, bool)
+	LoadTileConfigDTOs(tileConfigs []dtos.TileConfigDTO)
+}
 
 type SpriteConfig struct {
 	Name    string  // Name of the sprite.
@@ -139,4 +148,16 @@ func (tg *TileGrid) GetTile(x, y int) (string, bool) {
 		}
 	}
 	return "", false // Tile not found or is the default tile
+}
+
+// LoadTileConfigDTOs loads tile configurations from a UIConfigDTO into the TileGrid.
+func (tg *TileGrid) LoadTileConfigDTOs(tileConfigs []dtos.TileConfigDTO) {
+	for _, tileConfig := range tileConfigs {
+		tileName := tileConfig.TileName
+		for _, sprite := range tileConfig.Sprites {
+			// Call DefineTileConfig for each sprite in the tile configuration.
+			// This assumes DefineTileConfig has been adapted to work with strings for tile names.
+			tg.DefineTileConfig(tileName, sprite.Name, sprite.XOffset, sprite.YOffset)
+		}
+	}
 }

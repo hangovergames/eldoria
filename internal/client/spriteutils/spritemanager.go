@@ -2,7 +2,12 @@
 
 package spriteutils
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hangovergames/eldoria/internal/client/imageutils"
+	"github.com/hangovergames/eldoria/internal/common/dtos"
+	"log"
+)
 
 // ISpriteManager defines the behavior for managing sprites.
 type ISpriteManager interface {
@@ -13,15 +18,17 @@ type ISpriteManager interface {
 
 // SpriteManager manages multiple SpriteSheets and provides an easy way to retrieve sprites by name.
 type SpriteManager struct {
-	sheets  map[string]*SpriteSheet      // Map of sprite sheet names to SpriteSheet instances.
-	mapping map[string]*SpriteIdentifier // Map of sprite names to their identifiers (sheet name and index).
+	sheets       map[string]*SpriteSheet      // Map of sprite sheet names to SpriteSheet instances.
+	mapping      map[string]*SpriteIdentifier // Map of sprite names to their identifiers (sheet name and index).
+	imageManager imageutils.IImageManager     // Image manager
 }
 
 // NewSpriteManager creates a new instance of SpriteManager.
-func NewSpriteManager() *SpriteManager {
+func NewSpriteManager(imageManager imageutils.IImageManager) *SpriteManager {
 	return &SpriteManager{
-		sheets:  make(map[string]*SpriteSheet),
-		mapping: make(map[string]*SpriteIdentifier),
+		sheets:       make(map[string]*SpriteSheet),
+		mapping:      make(map[string]*SpriteIdentifier),
+		imageManager: imageManager,
 	}
 }
 
@@ -50,4 +57,17 @@ func (sm *SpriteManager) GetSprite(name string) *ebiten.Image {
 		return nil
 	}
 	return sheet.SubImage(identifier.Index)
+}
+
+// LoadSpriteSheetDTOs loads sprite sheets defined in UIConfigDTO.
+func (sm *SpriteManager) LoadSpriteSheetDTOs(spriteSheets []dtos.SpriteSheetDTO) {
+	for _, sheetDTO := range spriteSheets {
+		img := sm.imageManager.GetImage(sheetDTO.Image)
+		if img == nil {
+			log.Printf("Image not found for sprite sheet: %s", sheetDTO.Image)
+			continue
+		}
+		sheet := NewSpriteSheet(img, sheetDTO.TileWidth, sheetDTO.TileHeight, sheetDTO.TilesPerRow, sheetDTO.StartX, sheetDTO.StartY)
+		sm.RegisterSpriteSheet(sheetDTO.Name, sheet)
+	}
 }

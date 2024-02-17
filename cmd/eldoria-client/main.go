@@ -4,16 +4,18 @@ package main
 
 import (
 	"bytes"
-	"github.com/hangovergames/eldoria/internal/client/gameui"
-	"github.com/hangovergames/eldoria/internal/client/imageutils"
-	"github.com/hangovergames/eldoria/internal/client/spriteutils"
-	"github.com/hangovergames/eldoria/internal/client/ui/uiMap"
+	"github.com/hangovergames/eldoria/internal/common/dtos"
 	"image"
 	_ "image/png"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hangovergames/freeciv/data/trident"
+
+	"github.com/hangovergames/eldoria/internal/client/gameui"
+	"github.com/hangovergames/eldoria/internal/client/imageutils"
+	"github.com/hangovergames/eldoria/internal/client/spriteutils"
+	"github.com/hangovergames/eldoria/internal/client/ui/uiMap"
 )
 
 const (
@@ -36,43 +38,20 @@ func init() {
 		log.Fatal(err)
 	}
 
+	uiConfig := dtos.LoadUIConfigDTO("./examples/ui-config-dto.json")
+
 	imageManager.RegisterImage("freeciv/data/trident/tiles.png", ebiten.NewImageFromImage(img))
 
-	tilesSheet := spriteutils.NewSpriteSheet(
-		imageManager.GetImage("freeciv/data/trident/tiles.png"),
-		30,
-		30,
-		20,
-		0,
-		0,
-	)
+	spriteManager := spriteutils.NewSpriteManager(imageManager)
 
-	oceanTilesSheet := spriteutils.NewSpriteSheet(
-		imageManager.GetImage("freeciv/data/trident/tiles.png"),
-		15,
-		15,
-		32,
-		0,
-		210,
-	)
-
-	spriteManager := spriteutils.NewSpriteManager()
-
-	spriteManager.RegisterSpriteSheet("Tiles", tilesSheet)
-	spriteManager.RegisterSpriteSheet("OceanTiles", oceanTilesSheet)
+	spriteManager.LoadSpriteSheetDTOs(uiConfig.SpriteSheets)
 
 	spriteManager.MapSpriteName("ShallowOcean", "OceanTiles", 0)
 	spriteManager.MapSpriteName("DeepOcean", "OceanTiles", 10)
 	spriteManager.MapSpriteName("Grassland", "Tiles", 2)
 
 	tileMap := uiMap.NewTileGrid(spriteManager, 10, 10)
-
-	tileMap.DefineTileConfig("DeepOcean", "DeepOcean", 0, 0)
-	tileMap.DefineTileConfig("DeepOcean", "DeepOcean", 15, 0)
-	tileMap.DefineTileConfig("DeepOcean", "DeepOcean", 0, 15)
-	tileMap.DefineTileConfig("DeepOcean", "DeepOcean", 15, 15)
-
-	tileMap.DefineTileConfig("Grassland", "Grassland", 0, 0)
+	tileMap.LoadTileConfigDTOs(uiConfig.TileConfigs)
 
 	tileMap.SetTile(5, 5, "Grassland")
 

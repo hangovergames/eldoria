@@ -3,6 +3,8 @@
 package uiMap
 
 import (
+	"github.com/hangovergames/eldoria/internal/common/dtos"
+	"github.com/stretchr/testify/assert"
 	"testing"
 
 	"github.com/hangovergames/eldoria/internal/client/spriteutils"
@@ -43,4 +45,51 @@ func TestDefineTileConfig(t *testing.T) {
 		t.Errorf("Expected second sprite name to be 'oceanEdge', got '%s'", config.Sprites[1].Name)
 	}
 
+}
+
+func TestLoadTileConfigDTOs(t *testing.T) {
+
+	// Create a mock sprite manager
+	mockSpriteManager := new(spriteutils.MockSpriteManager)
+
+	// Create a TileGrid with the mock sprite manager
+	width, height := 10, 10
+	tileGrid := NewTileGrid(mockSpriteManager, width, height)
+
+	// Define tile configurations to load
+	tileConfigs := []dtos.TileConfigDTO{
+		{
+			TileName: "Grassland",
+			Sprites: []dtos.SpriteDTO{
+				{Name: "GrasslandSprite", XOffset: 0, YOffset: 0},
+			},
+		},
+		{
+			TileName: "Water",
+			Sprites: []dtos.SpriteDTO{
+				{Name: "WaterSprite", XOffset: 0, YOffset: 0},
+				{Name: "WaterDetail", XOffset: 5, YOffset: 5},
+			},
+		},
+	}
+
+	// Load the tile configurations into the TileGrid
+	tileGrid.LoadTileConfigDTOs(tileConfigs)
+
+	// Verify that tile configurations are loaded correctly
+	// For simplicity, we're checking the existence and count of sprites for one tile type.
+	// In a real test, you might want to check more details.
+	tileType, exists := tileGrid.nameToID["Grassland"]
+	assert.True(t, exists, "Expected Grassland tile to exist")
+
+	config, exists := tileGrid.tileMappings[tileType]
+	assert.True(t, exists, "Expected Grassland tile configuration to exist")
+	assert.Len(t, config.Sprites, 1, "Expected Grassland to have 1 sprite")
+
+	tileType, exists = tileGrid.nameToID["Water"]
+	assert.True(t, exists, "Expected Water tile to exist")
+
+	config, exists = tileGrid.tileMappings[tileType]
+	assert.True(t, exists, "Expected Water tile configuration to exist")
+	assert.Len(t, config.Sprites, 2, "Expected Water to have 2 sprites")
 }

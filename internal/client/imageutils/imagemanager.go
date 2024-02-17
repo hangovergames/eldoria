@@ -9,6 +9,10 @@ import (
 	"os"
 )
 
+type IImageManager interface {
+	GetImage(name string) *ebiten.Image
+}
+
 // ImageManager manages the storage and retrieval of ebiten.Images by name.
 type ImageManager struct {
 	images map[string]*ebiten.Image

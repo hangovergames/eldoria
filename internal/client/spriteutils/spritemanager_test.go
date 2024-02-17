@@ -3,12 +3,15 @@
 package spriteutils
 
 import (
+	"github.com/hangovergames/eldoria/internal/client/imageutils"
 	"testing"
 )
 
 func TestSpriteManager(t *testing.T) {
 
-	spriteManager := NewSpriteManager()
+	mockImageManager := imageutils.NewMockImageManager()
+
+	spriteManager := NewSpriteManager(mockImageManager)
 
 	// Mock sprite sheet registration
 	sheet := NewMockSpriteSheet(32, 32, 10, 0, 0)
