@@ -16,6 +16,14 @@ spriteSheets:
   startX: 0
   startY: 210
 
+- name: UnitTiles
+  image: "freeciv/data/trident/units.png"
+  tileWidth: 30
+  tileHeight: 30
+  tilesPerRow: 20
+  startX: 0
+  startY: 0
+
 sprites:
 
 - name: ShallowOcean
@@ -29,6 +37,10 @@ sprites:
 - name: Grassland
   sheetName: Tiles
   index: 2
+
+- name: Warrior
+  sheetName: UnitTiles
+  index: 18
 
 tiles:
 
@@ -52,3 +64,9 @@ tiles:
   - name: Grassland
     xOffset: 0
     yOffset: 0
+
+- name: Warrior
+  sprites:
+  - name: Warrior
+    xOffset: -2
+    yOffset: -1

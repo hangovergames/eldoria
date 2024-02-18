@@ -36,13 +36,76 @@ func init() {
 func main() {
 
 	// Decode an image from the image file's byte slice.
-	img, _, err := image.Decode(bytes.NewReader(images.Tiles_png))
+	TilesPngImg, _, err := image.Decode(bytes.NewReader(images.Tiles_png))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Decode an image from the image file's byte slice.
+	UnitsPngImg, _, err := image.Decode(bytes.NewReader(images.Units_png))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Decode an image from the image file's byte slice.
+	ExtraUnitsPngImg, _, err := image.Decode(bytes.NewReader(images.ExtraUnits_png))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Decode an image from the image file's byte slice.
+	FogPngImg, _, err := image.Decode(bytes.NewReader(images.Fog_png))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Decode an image from the image file's byte slice.
+	SelectPngImg, _, err := image.Decode(bytes.NewReader(images.Select_png))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Decode an image from the image file's byte slice.
+	RoadsPngImg, _, err := image.Decode(bytes.NewReader(images.Roads_png))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Decode an image from the image file's byte slice.
+	GridPngImg, _, err := image.Decode(bytes.NewReader(images.Grid_png))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Decode an image from the image file's byte slice.
+	ExplosionsPngImg, _, err := image.Decode(bytes.NewReader(images.Explosions_png))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Decode an image from the image file's byte slice.
+	EarthPngImg, _, err := image.Decode(bytes.NewReader(images.Earth_png))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Decode an image from the image file's byte slice.
+	CitiesPngImg, _, err := image.Decode(bytes.NewReader(images.Cities_png))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	imageManager = imageutils.NewImageManager()
-	imageManager.RegisterImage("freeciv/data/trident/tiles.png", ebiten.NewImageFromImage(img))
+	imageManager.RegisterImage("freeciv/data/trident/tiles.png", ebiten.NewImageFromImage(TilesPngImg))
+	imageManager.RegisterImage("freeciv/data/trident/units.png", ebiten.NewImageFromImage(UnitsPngImg))
+	imageManager.RegisterImage("freeciv/data/trident/extra_units.png", ebiten.NewImageFromImage(ExtraUnitsPngImg))
+	imageManager.RegisterImage("freeciv/data/trident/fog.png", ebiten.NewImageFromImage(FogPngImg))
+	imageManager.RegisterImage("freeciv/data/trident/select.png", ebiten.NewImageFromImage(SelectPngImg))
+	imageManager.RegisterImage("freeciv/data/trident/roads.png", ebiten.NewImageFromImage(RoadsPngImg))
+	imageManager.RegisterImage("freeciv/data/trident/grid.png", ebiten.NewImageFromImage(GridPngImg))
+	imageManager.RegisterImage("freeciv/data/trident/explosions.png", ebiten.NewImageFromImage(ExplosionsPngImg))
+	imageManager.RegisterImage("freeciv/data/trident/earth.png", ebiten.NewImageFromImage(EarthPngImg))
+	imageManager.RegisterImage("freeciv/data/trident/cities.png", ebiten.NewImageFromImage(CitiesPngImg))
 
 	client := apiClient.NewAPIClient("http://localhost:8080")
 
@@ -60,7 +123,7 @@ func main() {
 	tileMap.LoadTileConfigDTOs(uiConfig.TileConfigs)
 
 	// Draw tiles
-	tileMap.SetTile(5, 5, "Grassland")
+	tileMap.SetTile(5, 5, "Grassland", "Warrior")
 
 	gameUI = gameui.NewGameUI(screenWidth, screenHeight, tileMap)
 

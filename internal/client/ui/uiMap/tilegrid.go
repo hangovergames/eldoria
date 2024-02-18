@@ -11,8 +11,8 @@ import (
 // ITileGrid defines the interface for a tile grid.
 type ITileGrid interface {
 	Draw(screen *ebiten.Image, tileSizeX, tileSizeY int)
-	SetTile(x, y int, tileName string)
-	GetTile(x, y int) (string, bool)
+	SetTile(x, y int, tileNames ...string)
+	GetTile(x, y int) ([]string, bool)
 	LoadTileConfigDTOs(tileConfigs []dtos.TileConfigDTO)
 }
 
@@ -31,7 +31,7 @@ type TileGrid struct {
 	spriteManager spriteutils.ISpriteManager
 	width, height int                 // Map size in tiles.
 	tileMappings  map[uint]TileConfig // Mapping from tile type to visual configuration.
-	mapGrid       [][]uint            // Grid defining the tile type at each position.
+	mapGrid       [][][]uint          // Grid defining the tile type at each position.
 	nameToID      map[string]uint     // Mapping from tile names to uint identifiers.
 	nextID        uint                // Next available uint identifier for a new tile type.
 }
@@ -40,9 +40,12 @@ type TileGrid struct {
 func NewTileGrid(spriteManager spriteutils.ISpriteManager, width, height int) *TileGrid {
 
 	// Initialize the map grid with the specified dimensions.
-	mapGrid := make([][]uint, height)
-	for i := range mapGrid {
-		mapGrid[i] = make([]uint, width) // Initialize each row with the specified width.
+	mapGrid := make([][][]uint, height)
+	for y := range mapGrid {
+		mapGrid[y] = make([][]uint, width)
+		for x := range mapGrid[y] {
+			mapGrid[y][x] = make([]uint, 0)
+		}
 	}
 
 	// Return a new TileGrid instance.
@@ -93,61 +96,87 @@ func (um *TileGrid) Draw(
 	tileSizeX, tileSizeY int,
 ) {
 	for y, row := range um.mapGrid {
-		for x, tileType := range row {
+		for x, tiles := range row {
+			for _, tileType := range tiles {
 
-			config, exists := um.tileMappings[tileType]
-			if !exists {
-				continue // Skip undefined tiles
-			}
-
-			for _, spriteConfig := range config.Sprites {
-
-				sprite := um.spriteManager.GetSprite(spriteConfig.Name)
-
-				// Skip missing sprites
-				if sprite == nil {
-					continue
+				config, exists := um.tileMappings[tileType]
+				if !exists {
+					continue // Skip undefined tiles
 				}
 
-				opts := &ebiten.DrawImageOptions{}
+				for _, spriteConfig := range config.Sprites {
 
-				// Apply scale if necessary
-				//opts.GeoM.Scale(float64(tileSizeX)/float64(sprite.Bounds().Dx()), float64(tileSizeY)/float64(sprite.Bounds().Dy()))
+					sprite := um.spriteManager.GetSprite(spriteConfig.Name)
 
-				// Apply the specified offsets for each sprite
-				opts.GeoM.Translate(float64(x*tileSizeX)+spriteConfig.XOffset, float64(y*tileSizeY)+spriteConfig.YOffset)
+					// Skip missing sprites
+					if sprite == nil {
+						continue
+					}
 
-				screen.DrawImage(sprite, opts)
+					opts := &ebiten.DrawImageOptions{}
 
+					// Apply scale if necessary
+					//opts.GeoM.Scale(float64(tileSizeX)/float64(sprite.Bounds().Dx()), float64(tileSizeY)/float64(sprite.Bounds().Dy()))
+
+					// Apply the specified offsets for each sprite
+					opts.GeoM.Translate(float64(x*tileSizeX)+spriteConfig.XOffset, float64(y*tileSizeY)+spriteConfig.YOffset)
+
+					screen.DrawImage(sprite, opts)
+
+				}
 			}
 		}
 	}
 }
 
 // SetTile sets the tile type at the given position.
-func (tg *TileGrid) SetTile(x, y int, tileName string) {
-	id, exists := tg.nameToID[tileName]
-	if !exists {
+func (tg *TileGrid) SetTile(x, y int, tileNames ...string) {
+
+	if x < 0 || x >= tg.width || y < 0 || y >= tg.height {
 		return // Optionally handle error or log warning
 	}
-	if x >= 0 && x < tg.width && y >= 0 && y < tg.height {
-		tg.mapGrid[y][x] = id
+
+	var ids []uint
+	for _, tileName := range tileNames {
+		id, exists := tg.nameToID[tileName]
+		if !exists {
+			id = tg.nextID
+			tg.nextID++
+			tg.nameToID[tileName] = id
+			// Optionally initialize a new TileLayerConfig for this ID if needed.
+		}
+		ids = append(ids, id)
 	}
+
+	// Assign the slice of IDs (representing layers) to the position on the grid.
+	tg.mapGrid[y][x] = ids
+
 }
 
-// GetTile returns the tile type at the given position.
+// GetTile returns all tile types at the given position as a slice of strings.
 // The boolean return value indicates whether the position is within the grid bounds.
-func (tg *TileGrid) GetTile(x, y int) (string, bool) {
+func (tg *TileGrid) GetTile(x, y int) ([]string, bool) {
 	if x < 0 || x >= tg.width || y < 0 || y >= tg.height {
-		return "", false
+		return nil, false
 	}
-	id := tg.mapGrid[y][x]
-	for name, idMapping := range tg.nameToID {
-		if id == idMapping {
-			return name, true
+
+	ids := tg.mapGrid[y][x] // Get all layer IDs at this position
+	tileNames := make([]string, 0, len(ids))
+
+	for _, id := range ids {
+		for name, idMapping := range tg.nameToID {
+			if id == idMapping {
+				tileNames = append(tileNames, name)
+				break // Break after finding the name, assuming id to name mapping is one-to-one
+			}
 		}
 	}
-	return "", false // Tile not found or is the default tile
+
+	if len(tileNames) == 0 {
+		return nil, true // Position is valid, but no tiles found (empty tile)
+	}
+
+	return tileNames, true
 }
 
 // LoadTileConfigDTOs loads tile configurations from a UIConfigDTO into the TileGrid.

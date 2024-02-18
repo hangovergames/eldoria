@@ -19,14 +19,14 @@ func (m *MockTileGrid) Draw(screen *ebiten.Image, tileSizeX, tileSizeY int) {
 }
 
 // SetTile simulates setting a tile at a given position.
-func (m *MockTileGrid) SetTile(x, y int, tileName string) {
-	m.Called(x, y, tileName)
+func (m *MockTileGrid) SetTile(x, y int, tileNames ...string) {
+	m.Called(x, y, tileNames)
 }
 
-// GetTile simulates getting a tile at a given position.
-func (m *MockTileGrid) GetTile(x, y int) (string, bool) {
+// GetTile simulates getting tile names at a given position.
+func (m *MockTileGrid) GetTile(x, y int) ([]string, bool) {
 	args := m.Called(x, y)
-	return args.String(0), args.Bool(1)
+	return args.Get(0).([]string), args.Bool(1)
 }
 
 // Implement the LoadTileConfigDTOs method to satisfy the ITileGrid interface.
