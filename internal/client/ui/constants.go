@@ -14,10 +14,13 @@ const (
 	OrbitronFontName        = "Orbitron"
 	MerriweatherFontName    = "Merriweather"
 
-	LoginScreenFontName    = MerriweatherFontName
-	LoginScreenFontSize    = 18
-	LoginScreenFontDPI     = 96
-	MinLoginNameLength     = 3
-	MaxLoginNameLength     = 9
+	DefaultFontName = MerriweatherFontName
+
+	LoginScreenFontName = DefaultFontName
+	LoginScreenFontSize = 18
+	LoginScreenFontDPI  = 96
+	MinLoginNameLength  = 3
+	MaxLoginNameLength  = 9
+
 	AllowedLoginCharacters = "qwertyuiopasdfghjklzxcvbnm_1234567890QWERTYUIOPASDFGHJKLZXCVBNM"
 )

@@ -3,6 +3,7 @@
 package uifields
 
 import (
+	"github.com/hangovergames/eldoria/internal/client/uikeys"
 	"golang.org/x/image/font"
 	"image/color"
 	"strings"
@@ -11,7 +12,6 @@ import (
 
 	"github.com/hangovergames/eldoria/internal/client/drawutils"
 	"github.com/hangovergames/eldoria/internal/client/ui"
-	"github.com/hangovergames/eldoria/internal/client/uikeys"
 )
 
 type TextField struct {
@@ -55,15 +55,45 @@ func (tf *TextField) SetPlaceholderFont(fontName string, size float64, dpi float
 	tf.PlaceholderFontFace = tf.FontManager.GetFace(fontName, size, dpi)
 }
 
+func (tf *TextField) populateDefaults() {
+
+	if tf.Keyboard == nil {
+		tf.Keyboard = &uikeys.EbitenKeyboard{}
+	}
+
+	if tf.MaxLength == 0 {
+		tf.MaxLength = 1000
+	}
+
+	if tf.Width == 0 {
+		tf.Width = 200
+	}
+
+	if tf.Height == 0 {
+		tf.Height = 30
+	}
+
+	if tf.FontName == "" {
+		tf.FontName = ui.DefaultFontName
+	}
+
+	if tf.TextColor == nil {
+		tf.TextColor = color.Black
+	}
+
+	if tf.PlaceholderColor == nil {
+		tf.PlaceholderColor = color.RGBA{R: 150, G: 150, B: 150, A: 255}
+	}
+
+}
+
 func (tf *TextField) Update() {
 
 	if !tf.IsActive {
 		return
 	}
 
-	if tf.Keyboard == nil {
-		tf.Keyboard = &uikeys.EbitenKeyboard{}
-	}
+	tf.populateDefaults()
 
 	// Create a buffer for input characters with a reasonable initial capacity
 	inputChars := make([]rune, 0, 24)
