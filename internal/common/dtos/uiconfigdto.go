@@ -4,6 +4,8 @@ package dtos
 
 import (
 	"encoding/json"
+	"fmt"
+	"gopkg.in/yaml.v2"
 	"log"
 	"os"
 	"path/filepath"
@@ -36,15 +38,15 @@ type SpriteDTO struct {
 
 // TileConfigDTO represents the configuration for a tile, including all its sprites.
 type TileConfigDTO struct {
-	TileName string      `json:"tileName"`
+	TileName string      `json:"name"`
 	Sprites  []SpriteDTO `json:"sprites"`
 }
 
 // UIConfigDTO represents the top-level configuration structure.
 type UIConfigDTO struct {
 	SpriteSheets  []SpriteSheetDTO  `json:"spriteSheets"`
-	SpriteConfigs []SpriteConfigDTO `json:"spriteConfigs"`
-	TileConfigs   []TileConfigDTO   `json:"tileConfigs"`
+	SpriteConfigs []SpriteConfigDTO `json:"sprites"`
+	TileConfigs   []TileConfigDTO   `json:"tiles"`
 }
 
 func LoadUIConfigDTO(relativeConfigPath string) UIConfigDTO {
@@ -73,4 +75,24 @@ func LoadUIConfigDTO(relativeConfigPath string) UIConfigDTO {
 	log.Println("Returning: ", config)
 
 	return config
+}
+
+// LoadUIConfigDTOFromYAML loads UI configuration from a YAML file.
+func LoadUIConfigDTOFromYAML(configPath string) (UIConfigDTO, error) {
+
+	// Read the YAML file
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		return UIConfigDTO{}, fmt.Errorf("failed to read configuration file: %v", err)
+	}
+
+	// Unmarshal the YAML into the UIConfigDTO struct
+	var config UIConfigDTO
+	if err := yaml.Unmarshal(data, &config); err != nil {
+		return UIConfigDTO{}, fmt.Errorf("failed to parse configuration YAML: %v", err)
+	}
+
+	log.Println("Returning: ", config)
+
+	return config, nil
 }

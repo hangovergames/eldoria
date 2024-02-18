@@ -2,15 +2,18 @@
 
 package gameMap
 
-import "testing"
+import (
+	"github.com/hangovergames/eldoria/internal/server/game"
+	"testing"
+)
 
 func TestTileEffectToString(t *testing.T) {
 	tests := []struct {
-		effect TileEffect
+		effect game.TileEffect
 		want   string
 	}{
-		{Passable, "Passable"},
-		{ProvidesFreshWater, "ProvidesFreshWater"},
+		{game.Passable, "Passable"},
+		{game.ProvidesFreshWater, "ProvidesFreshWater"},
 		{0, "Unknown"}, // Testing an undefined effect
 	}
 
@@ -27,11 +30,11 @@ func TestTileEffectToString(t *testing.T) {
 func TestStringToTileEffect(t *testing.T) {
 	tests := []struct {
 		effectStr string
-		want      TileEffect
+		want      game.TileEffect
 		wantErr   bool
 	}{
-		{"Passable", Passable, false},
-		{"ProvidesFreshWater", ProvidesFreshWater, false},
+		{"Passable", game.Passable, false},
+		{"ProvidesFreshWater", game.ProvidesFreshWater, false},
 		{"NonexistentEffect", 0, true}, // Testing an unknown effect
 	}
 
@@ -52,11 +55,11 @@ func TestStringToTileEffect(t *testing.T) {
 func TestCombineTileEffects(t *testing.T) {
 	tests := []struct {
 		name  string
-		input []TileEffect
-		want  TileEffect
+		input []game.TileEffect
+		want  game.TileEffect
 	}{
-		{"PassableAndFertile", []TileEffect{Passable, Fertile}, Passable | Fertile},
-		{"Empty", []TileEffect{}, 0},
+		{"PassableAndFertile", []game.TileEffect{game.Passable, game.Fertile}, game.Passable | game.Fertile},
+		{"Empty", []game.TileEffect{}, 0},
 	}
 
 	for _, tt := range tests {
@@ -97,43 +100,43 @@ func TestStringsToTileEffects(t *testing.T) {
 func TestTileEffect_HasTileEffect(t *testing.T) {
 	tests := []struct {
 		name       string
-		tileEffect TileEffect
-		effect     TileEffect
+		tileEffect game.TileEffect
+		effect     game.TileEffect
 		want       bool
 	}{
 		{
 			name:       "SingleEffectTrue",
-			tileEffect: Passable,
-			effect:     Passable,
+			tileEffect: game.Passable,
+			effect:     game.Passable,
 			want:       true,
 		},
 		{
 			name:       "SingleEffectFalse",
-			tileEffect: Passable,
-			effect:     Fertile,
+			tileEffect: game.Passable,
+			effect:     game.Fertile,
 			want:       false,
 		},
 		{
 			name:       "CombinedEffectTrue",
-			tileEffect: Passable | Fertile,
-			effect:     Fertile,
+			tileEffect: game.Passable | game.Fertile,
+			effect:     game.Fertile,
 			want:       true,
 		},
 		{
 			name:       "CombinedEffectFalse",
-			tileEffect: Passable | Fertile,
-			effect:     RichInWood,
+			tileEffect: game.Passable | game.Fertile,
+			effect:     game.RichInWood,
 			want:       false,
 		},
 		{
 			name:       "NoEffect",
 			tileEffect: 0,
-			effect:     Passable,
+			effect:     game.Passable,
 			want:       false,
 		},
 		{
 			name:       "CheckAgainstNoEffect",
-			tileEffect: Passable,
+			tileEffect: game.Passable,
 			effect:     0,
 			want:       false, // Depending on interpretation, checking against "no effect" could be true or false. Adjust based on your logic.
 		},

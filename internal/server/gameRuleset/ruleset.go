@@ -4,8 +4,11 @@ package gameRuleset
 
 import (
 	"fmt"
-	"github.com/hangovergames/eldoria/internal/server/gameMap"
 	"path/filepath"
+
+	"github.com/hangovergames/eldoria/internal/common/dtos"
+	"github.com/hangovergames/eldoria/internal/server/game"
+	"github.com/hangovergames/eldoria/internal/server/gameMap"
 )
 
 type Ruleset struct {
@@ -15,37 +18,45 @@ type Ruleset struct {
 	Tiles            TilesFile
 	Resources        ResourcesFile
 	Effects          EffectsFile
+	UI               dtos.UIConfigDTO
 }
 
 // LoadRuleset combines loading of RulesetFile and TilesFile into a single Ruleset struct.
 func LoadRuleset(rulesetPath string) (Ruleset, error) {
 
 	// Load the basic gameRuleset
-	rulesetFilePath := filepath.Join(rulesetPath, "gameRuleset.yml")
+	rulesetFilePath := filepath.Join(rulesetPath, "ruleset.yml")
 	rulesetFile, err := LoadRulesetFile(rulesetFilePath)
 	if err != nil {
-		return Ruleset{}, fmt.Errorf("failed to load gameRuleset.yml: %w", err)
+		return Ruleset{}, fmt.Errorf("failed to load %s: %w", rulesetFilePath, err)
 	}
 
 	// Load tiles
 	tilesFilePath := filepath.Join(rulesetPath, "tiles.yml")
 	tilesFile, err := LoadTilesFile(tilesFilePath)
 	if err != nil {
-		return Ruleset{}, fmt.Errorf("failed to load tiles.yml: %w", err)
+		return Ruleset{}, fmt.Errorf("failed to load %s: %w", tilesFilePath, err)
 	}
 
 	// Load resources
 	resourcesFilePath := filepath.Join(rulesetPath, "resources.yml")
 	resourcesFile, err := LoadResourcesFile(resourcesFilePath)
 	if err != nil {
-		return Ruleset{}, fmt.Errorf("failed to load resources.yml: %w", err)
+		return Ruleset{}, fmt.Errorf("failed to load %s: %w", resourcesFilePath, err)
 	}
 
 	// Load effects
 	effectsFilePath := filepath.Join(rulesetPath, "effects.yml")
 	effectsFile, err := LoadEffectsFile(effectsFilePath)
 	if err != nil {
-		return Ruleset{}, fmt.Errorf("failed to load effects.yml: %w", err)
+		return Ruleset{}, fmt.Errorf("failed to load %s: %w", effectsFilePath, err)
+	}
+
+	// Load UI config
+	uiFilePath := filepath.Join(rulesetPath, "ui.yml")
+	uiFile, err := dtos.LoadUIConfigDTOFromYAML(uiFilePath)
+	if err != nil {
+		return Ruleset{}, fmt.Errorf("failed to load %s: %w", uiFilePath, err)
 	}
 
 	// Combine the loaded data into a single Ruleset struct
@@ -56,6 +67,7 @@ func LoadRuleset(rulesetPath string) (Ruleset, error) {
 		Tiles:            tilesFile,
 		Resources:        resourcesFile,
 		Effects:          effectsFile,
+		UI:               uiFile,
 	}
 
 	return ruleset, nil
@@ -64,25 +76,25 @@ func LoadRuleset(rulesetPath string) (Ruleset, error) {
 // FindTileType finds the index of a given tile name in the Ruleset.EnabledTiles slice,
 // which represents the TileType.
 // It returns the index and a boolean indicating whether the tile was found.
-func (r *Ruleset) FindTileType(tileName string) (gameMap.TileType, bool) {
+func (r *Ruleset) FindTileType(tileName string) (game.TileType, bool) {
 	for index, name := range r.EnabledTiles {
 		if name == tileName {
-			return gameMap.TileType(index), true
+			return game.TileType(index), true
 		}
 	}
-	return gameMap.UnknownTileType, false // Return -1 when not found
+	return game.UnknownTileType, false
 }
 
 // FindModifierType finds the index of a given tile modifier name in the
 // Ruleset.EnabledModifiers slice, which represents the ModifierType.
 // It returns the index and a boolean indicating whether the tile modifier was found.
-func (r *Ruleset) FindModifierType(tileName string) (gameMap.ModifierType, bool) {
+func (r *Ruleset) FindModifierType(tileName string) (game.ModifierType, bool) {
 	for index, name := range r.EnabledModifiers {
 		if name == tileName {
-			return gameMap.ModifierType(index), true
+			return game.ModifierType(index), true
 		}
 	}
-	return gameMap.UnknownModifierType, false // Return -1 when not found
+	return game.UnknownModifierType, false // Return -1 when not found
 }
 
 // CreateTileFromName creates a Tile based on its name using the definitions in
@@ -90,25 +102,27 @@ func (r *Ruleset) FindModifierType(tileName string) (gameMap.ModifierType, bool)
 // not have any modifiers set.
 func (r *Ruleset) CreateTileFromName(
 	tileName string,
-) (gameMap.Tile, error) {
+) (game.ITile, error) {
 
 	tileType, found := r.FindTileType(tileName)
 	if !found {
-		return gameMap.Tile{}, fmt.Errorf("tile '%s' not found in enabled tiles", tileName)
+		return nil, fmt.Errorf("tile '%s' not found in enabled tiles", tileName)
 	}
 
 	tileConfig, exists := r.Tiles.Tiles[tileName]
 	if !exists {
-		return gameMap.Tile{}, fmt.Errorf("tile '%s' does not have a configuration", tileName)
+		return nil, fmt.Errorf("tile '%s' does not have a configuration", tileName)
 	}
 
 	combinedEffects, err := r.ConvertAndCombineTileEffects(tileConfig.Effects)
 	if err != nil {
 		fmt.Println("Error combining effects:", err)
-		return gameMap.Tile{}, fmt.Errorf("tile '%s' failed to setup effects", tileName)
+		return nil, fmt.Errorf("tile '%s' failed to setup effects", tileName)
 	}
 
-	return gameMap.NewTile(tileType, []gameMap.ModifierType{}, combinedEffects), nil
+	var tile = gameMap.NewTile(tileType, []game.ModifierType{}, combinedEffects)
+
+	return &tile, nil
 }
 
 // IsEffectEnabled checks if a given effect string is in the list of enabled effects.
@@ -124,10 +138,10 @@ func (r *Ruleset) IsEffectEnabled(effectStr string) bool {
 // ConvertAndCombineTileEffects converts a slice of effect strings to TileEffect enums,
 // filters out any effects not enabled in the Ruleset, combines them, and returns the combined TileEffect.
 // If an error occurs during conversion, it can either ignore the error and continue, or return the combined effects up to that point along with the error.
-func (r *Ruleset) ConvertAndCombineTileEffects(effectStrs []string) (gameMap.TileEffect, error) {
+func (r *Ruleset) ConvertAndCombineTileEffects(effectStrings []string) (game.TileEffect, error) {
 
-	var effects []gameMap.TileEffect
-	for _, effectStr := range effectStrs {
+	var effects []game.TileEffect
+	for _, effectStr := range effectStrings {
 		if r.IsEffectEnabled(effectStr) {
 			effect, err := gameMap.StringToTileEffect(effectStr)
 			if err != nil {

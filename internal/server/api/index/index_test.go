@@ -5,6 +5,7 @@ package index
 import (
 	"github.com/hangovergames/eldoria/internal/server/apiRequests"
 	"github.com/hangovergames/eldoria/internal/server/apiResponses"
+	"github.com/hangovergames/eldoria/internal/server/game/mocks"
 	"testing"
 )
 
@@ -23,8 +24,9 @@ func TestIndex(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			mockResponse := &apiResponses.MockResponse{}
 			mockRequest := &apiRequests.MockRequest{IsGet: tt.requestMethod}
+			mockServer := mocks.NewMockServer()
 
-			Index(mockResponse, mockRequest)
+			Index(mockResponse, mockRequest, mockServer)
 
 			if tt.expectError {
 				if !mockResponse.MethodNotAllowed {

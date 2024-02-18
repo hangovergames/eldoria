@@ -4,16 +4,17 @@ package gameRuleset
 
 import (
 	"github.com/hangovergames/eldoria/internal/common/testutils"
-	"github.com/hangovergames/eldoria/internal/server/gameMap"
+	"github.com/hangovergames/eldoria/internal/server/game"
 	"testing"
 )
 
 func TestLoadRuleset(t *testing.T) {
+
 	// Create a temporary directory for the test environment
 	dirPath, cleanupDir := testutils.CreateTempDir(t)
 	defer cleanupDir()
 
-	// Create gameRuleset.yml
+	// Create ruleset.yml
 	rulesetContent := `tiles:
 - Unknown
 - ShallowOcean
@@ -27,7 +28,7 @@ effects:
 - SupportsNavalUnits
 - Passable
 `
-	_, cleanupFile := testutils.CreateFileInDir(t, dirPath, "gameRuleset.yml", rulesetContent)
+	_, cleanupFile := testutils.CreateFileInDir(t, dirPath, "ruleset.yml", rulesetContent)
 	defer cleanupFile()
 
 	// Create tiles.yml
@@ -84,6 +85,66 @@ effects:
 	_, cleanupEffectsFile := testutils.CreateFileInDir(t, dirPath, "effects.yml", effectsContent)
 	defer cleanupEffectsFile()
 
+	// Create ui.yml
+	uiContent := `
+spriteSheets:
+
+  Tiles:
+    image: "freeciv/data/trident/tiles.png"
+    tileWidth: 30
+    tileHeight: 30
+    tilesPerRow: 20
+    startX: 0
+    startY: 0
+
+  OceanTiles:
+    image: "freeciv/data/trident/tiles.png"
+    tileWidth: 15
+    tileHeight: 15
+    tilesPerRow: 32
+    startX: 0
+    startY: 210
+
+sprites:
+
+- name: ShallowOcean
+  sheetName: OceanTiles
+  index: 0
+
+- name: DeepOcean
+  sheetName: OceanTiles
+  index: 10
+
+- name: Grassland
+  sheetName: Tiles
+  index: 2
+
+tiles:
+
+- name: DeepOcean
+  sprites:
+  - name: DeepOcean
+    xOffset: 0
+    yOffset: 0
+  - name: DeepOcean
+    xOffset: 15
+    yOffset: 0
+  - name: DeepOcean
+    xOffset: 0
+    yOffset: 15
+  - name: DeepOcean
+    xOffset: 15
+    yOffset: 15
+
+- name: Grassland
+  sprites:
+  - name: Grassland
+    xOffset: 0
+    yOffset: 0
+`
+	_, cleanupUIFile := testutils.CreateFileInDir(t, dirPath, "ui.yml", uiContent)
+	defer cleanupUIFile()
+
 	// Now you can test LoadRuleset with the path to the temporary directory
 	_, err := LoadRuleset(dirPath)
 	if err != nil {
@@ -103,7 +164,7 @@ func TestRuleset_FindTileType(t *testing.T) {
 	tests := []struct {
 		name      string
 		tileName  string
-		want      gameMap.TileType
+		want      game.TileType
 		wantFound bool
 	}{
 		{
@@ -115,7 +176,7 @@ func TestRuleset_FindTileType(t *testing.T) {
 		{
 			name:      "TileDoesNotExist",
 			tileName:  "Desert",
-			want:      gameMap.UnknownTileType, // Assuming UnknownTileType represents not found
+			want:      game.UnknownTileType, // Assuming UnknownTileType represents not found
 			wantFound: false,
 		},
 		{
@@ -152,7 +213,7 @@ func TestRuleset_FindModifierType(t *testing.T) {
 	tests := []struct {
 		name         string
 		modifierName string
-		want         gameMap.ModifierType
+		want         game.ModifierType
 		wantFound    bool
 	}{
 		{
@@ -164,7 +225,7 @@ func TestRuleset_FindModifierType(t *testing.T) {
 		{
 			name:         "ModifierDoesNotExist",
 			modifierName: "Bridge",
-			want:         gameMap.UnknownModifierType, // Assuming UnknownModifierType represents not found
+			want:         game.UnknownModifierType, // Assuming UnknownModifierType represents not found
 			wantFound:    false,
 		},
 		{

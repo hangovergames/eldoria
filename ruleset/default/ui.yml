@@ -1,0 +1,54 @@
+spriteSheets:
+
+  Tiles:
+    image: "freeciv/data/trident/tiles.png"
+    tileWidth: 30
+    tileHeight: 30
+    tilesPerRow: 20
+    startX: 0
+    startY: 0
+
+  OceanTiles:
+    image: "freeciv/data/trident/tiles.png"
+    tileWidth: 15
+    tileHeight: 15
+    tilesPerRow: 32
+    startX: 0
+    startY: 210
+
+sprites:
+
+- name: ShallowOcean
+  sheetName: OceanTiles
+  index: 0
+
+- name: DeepOcean
+  sheetName: OceanTiles
+  index: 10
+
+- name: Grassland
+  sheetName: Tiles
+  index: 2
+
+tiles:
+
+- name: DeepOcean
+  sprites:
+  - name: DeepOcean
+    xOffset: 0
+    yOffset: 0
+  - name: DeepOcean
+    xOffset: 15
+    yOffset: 0
+  - name: DeepOcean
+    xOffset: 0
+    yOffset: 15
+  - name: DeepOcean
+    xOffset: 15
+    yOffset: 15
+
+- name: Grassland
+  sprites:
+  - name: Grassland
+    xOffset: 0
+    yOffset: 0

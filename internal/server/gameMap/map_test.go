@@ -3,12 +3,13 @@
 package gameMap
 
 import (
+	"github.com/hangovergames/eldoria/internal/server/game"
 	"reflect"
 	"testing"
 )
 
-var DeepOcean Tile = NewTile(0, []ModifierType{}, NoTileEffects)
-var Grassland Tile = NewTile(1, []ModifierType{}, NoTileEffects)
+var DeepOcean game.ITile = NewTile(0, []game.ModifierType{}, game.NoTileEffects)
+var Grassland game.ITile = NewTile(1, []game.ModifierType{}, game.NoTileEffects)
 
 func TestNewGameMap(t *testing.T) {
 	gm := NewGameMap(10, 5, DeepOcean)
@@ -17,7 +18,7 @@ func TestNewGameMap(t *testing.T) {
 	}
 	for _, row := range gm.Tiles {
 		for _, tile := range row {
-			if tile.Type != DeepOcean.Type {
+			if tile.GetType() != DeepOcean.GetType() {
 				t.Errorf("NewGameMap default tile incorrect, expected: 0, got: %d", tile)
 			}
 		}
@@ -36,8 +37,8 @@ func TestGetSetTile(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetTile returned an error: %v", err)
 	}
-	if tile.Type != Grassland.Type {
-		t.Errorf("Expected tile type Grassland, got: %d", tile.Type)
+	if tile.GetType() != Grassland.GetType() {
+		t.Errorf("Expected tile type Grassland, got: %d", tile.GetType())
 	}
 
 	// Test out of bounds
@@ -48,6 +49,7 @@ func TestGetSetTile(t *testing.T) {
 }
 
 func TestGetTilesInArea(t *testing.T) {
+
 	gm := NewGameMap(10, 5, DeepOcean)
 	gm.SetTile(1, 1, Grassland) // Set a specific tile to make the test meaningful
 
@@ -55,7 +57,7 @@ func TestGetTilesInArea(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetTilesInArea returned an error: %v", err)
 	}
-	expected := [][]Tile{
+	expected := [][]game.ITile{
 		{DeepOcean, DeepOcean, DeepOcean},
 		{DeepOcean, Grassland, DeepOcean},
 		{DeepOcean, DeepOcean, DeepOcean},

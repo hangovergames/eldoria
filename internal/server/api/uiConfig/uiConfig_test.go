@@ -5,6 +5,7 @@ import (
 	"github.com/hangovergames/eldoria/internal/common/dtos"
 	"github.com/hangovergames/eldoria/internal/server/apiRequests"
 	"github.com/hangovergames/eldoria/internal/server/apiResponses"
+	"github.com/hangovergames/eldoria/internal/server/game/mocks"
 	"testing"
 )
 
@@ -22,8 +23,9 @@ func TestUIConfig(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			mockResponse := &apiResponses.MockResponse{}
 			mockRequest := &apiRequests.MockRequest{IsGet: tt.requestMethod}
+			mockServer := mocks.NewMockServer()
 
-			UIConfig(mockResponse, mockRequest)
+			UIConfig(mockResponse, mockRequest, mockServer)
 
 			if tt.expectError {
 				if !mockResponse.MethodNotAllowed {

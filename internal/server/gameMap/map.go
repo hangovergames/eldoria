@@ -2,21 +2,24 @@
 
 package gameMap
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/hangovergames/eldoria/internal/server/game"
+)
 
 type GameMap struct {
-	Tiles         [][]Tile
+	Tiles         [][]game.ITile
 	Width, Height int
 }
 
 func NewGameMap(
 	width,
 	height int,
-	defaultTile Tile,
+	defaultTile game.ITile,
 ) *GameMap {
-	tiles := make([][]Tile, height)
+	tiles := make([][]game.ITile, height)
 	for i := range tiles {
-		tiles[i] = make([]Tile, width)
+		tiles[i] = make([]game.ITile, width)
 		for j := range tiles[i] {
 			tiles[i][j] = defaultTile.Clone()
 		}
@@ -29,7 +32,7 @@ func NewGameMap(
 }
 
 // GetTile returns the ID of the tile at the given coordinates.
-func (gm *GameMap) GetTile(x, y int) (Tile, error) {
+func (gm *GameMap) GetTile(x, y int) (game.ITile, error) {
 	if x < 0 || y < 0 || x >= gm.Width || y >= gm.Height {
 		return Tile{}, fmt.Errorf("coordinates out of bounds")
 	}
@@ -37,7 +40,7 @@ func (gm *GameMap) GetTile(x, y int) (Tile, error) {
 }
 
 // SetTile sets the ID of the tile at the given coordinates.
-func (gm *GameMap) SetTile(x, y int, newTile Tile) error {
+func (gm *GameMap) SetTile(x, y int, newTile game.ITile) error {
 	if x < 0 || y < 0 || x >= gm.Width || y >= gm.Height {
 		return fmt.Errorf("coordinates out of bounds")
 	}
@@ -46,7 +49,7 @@ func (gm *GameMap) SetTile(x, y int, newTile Tile) error {
 }
 
 // GetTilesInArea returns a 2D slice of tile IDs within the specified rectangular area.
-func (gm *GameMap) GetTilesInArea(x, y, x2, y2 int) ([][]Tile, error) {
+func (gm *GameMap) GetTilesInArea(x, y, x2, y2 int) ([][]game.ITile, error) {
 
 	// Validate coordinates
 	if x < 0 || y < 0 || x2 >= gm.Width || y2 >= gm.Height || x > x2 || y > y2 {
@@ -58,9 +61,9 @@ func (gm *GameMap) GetTilesInArea(x, y, x2, y2 int) ([][]Tile, error) {
 	height := y2 - y + 1
 
 	// Initialize the slice to hold the tiles
-	areaTiles := make([][]Tile, height)
+	areaTiles := make([][]game.ITile, height)
 	for i := range areaTiles {
-		areaTiles[i] = make([]Tile, width)
+		areaTiles[i] = make([]game.ITile, width)
 	}
 
 	// Populate the slice with tile IDs

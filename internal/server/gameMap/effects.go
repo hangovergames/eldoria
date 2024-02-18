@@ -2,62 +2,45 @@
 
 package gameMap
 
-import "fmt"
-
-type TileEffect uint
-
-const NoTileEffects TileEffect = 0
-
-const (
-	Passable            TileEffect = 1 << iota // Tile can be passed by units.
-	ProvidesFreshWater                         // Tile provides access to fresh water.
-	ImpedesMovement                            // Tile slows down unit movement.
-	BlocksNavalMovement                        // Tile cannot be navigated by naval units.
-	Fertile                                    // Tile is suitable for agriculture.
-	RichInWood                                 // Tile is rich in specific resources (minerals, wood, etc.).
-	RichInGold                                 // Tile is rich in specific resources (minerals, wood, etc.).
-	RichInRock                                 // Tile is rich in specific resources (minerals, wood, etc.).
-	RichInFish                                 // Tile is rich in specific resources (minerals, wood, etc.).
-	DefensiveBonus                             // Tile provides defensive bonuses to units.
-	DamagesUnits                               // Tile causes damage to units over time (e.g., volcanoes, swamps).
-	EnhancesMovement                           // Tile enhances movement speed (e.g., roads).
-	SupportsNavalUnits                         // Tile supports naval unit movement or docking.
+import (
+	"fmt"
+	"github.com/hangovergames/eldoria/internal/server/game"
 )
 
-var tileEffectToString = map[TileEffect]string{
-	Passable:            "Passable",
-	ProvidesFreshWater:  "ProvidesFreshWater",
-	ImpedesMovement:     "ImpedesMovement",
-	BlocksNavalMovement: "BlocksNavalMovement",
-	Fertile:             "Fertile",
-	RichInWood:          "RichInWood",
-	RichInGold:          "RichInGold",
-	RichInRock:          "RichInRock",
-	RichInFish:          "RichInFish",
-	DefensiveBonus:      "DefensiveBonus",
-	DamagesUnits:        "DamagesUnits",
-	EnhancesMovement:    "EnhancesMovement",
-	SupportsNavalUnits:  "SupportsNavalUnits",
+var tileEffectToString = map[game.TileEffect]string{
+	game.Passable:            "Passable",
+	game.ProvidesFreshWater:  "ProvidesFreshWater",
+	game.ImpedesMovement:     "ImpedesMovement",
+	game.BlocksNavalMovement: "BlocksNavalMovement",
+	game.Fertile:             "Fertile",
+	game.RichInWood:          "RichInWood",
+	game.RichInGold:          "RichInGold",
+	game.RichInRock:          "RichInRock",
+	game.RichInFish:          "RichInFish",
+	game.DefensiveBonus:      "DefensiveBonus",
+	game.DamagesUnits:        "DamagesUnits",
+	game.EnhancesMovement:    "EnhancesMovement",
+	game.SupportsNavalUnits:  "SupportsNavalUnits",
 }
 
-var stringToTileEffect = map[string]TileEffect{
-	"Passable":            Passable,
-	"ProvidesFreshWater":  ProvidesFreshWater,
-	"ImpedesMovement":     ImpedesMovement,
-	"BlocksNavalMovement": BlocksNavalMovement,
-	"Fertile":             Fertile,
-	"RichInWood":          RichInWood,
-	"RichInGold":          RichInGold,
-	"RichInRock":          RichInRock,
-	"RichInFish":          RichInFish,
-	"DefensiveBonus":      DefensiveBonus,
-	"DamagesUnits":        DamagesUnits,
-	"EnhancesMovement":    EnhancesMovement,
-	"SupportsNavalUnits":  SupportsNavalUnits,
+var stringToTileEffect = map[string]game.TileEffect{
+	"Passable":            game.Passable,
+	"ProvidesFreshWater":  game.ProvidesFreshWater,
+	"ImpedesMovement":     game.ImpedesMovement,
+	"BlocksNavalMovement": game.BlocksNavalMovement,
+	"Fertile":             game.Fertile,
+	"RichInWood":          game.RichInWood,
+	"RichInGold":          game.RichInGold,
+	"RichInRock":          game.RichInRock,
+	"RichInFish":          game.RichInFish,
+	"DefensiveBonus":      game.DefensiveBonus,
+	"DamagesUnits":        game.DamagesUnits,
+	"EnhancesMovement":    game.EnhancesMovement,
+	"SupportsNavalUnits":  game.SupportsNavalUnits,
 }
 
 // TileEffectToString stringifies numeric TileEffect
-func TileEffectToString(effect TileEffect) string {
+func TileEffectToString(effect game.TileEffect) string {
 	if str, ok := tileEffectToString[effect]; ok {
 		return str
 	}
@@ -65,23 +48,23 @@ func TileEffectToString(effect TileEffect) string {
 }
 
 // StringToTileEffect parses string to numeric TileEffect
-func StringToTileEffect(effectStr string) (TileEffect, error) {
+func StringToTileEffect(effectStr string) (game.TileEffect, error) {
 	if effect, ok := stringToTileEffect[effectStr]; ok {
 		return effect, nil
 	}
 	return 0, fmt.Errorf("unknown effect: %s", effectStr)
 }
 
-func CombineTileEffects(effects []TileEffect) TileEffect {
-	var combinedEffect TileEffect
+func CombineTileEffects(effects []game.TileEffect) game.TileEffect {
+	var combinedEffect game.TileEffect
 	for _, effect := range effects {
 		combinedEffect |= effect
 	}
 	return combinedEffect
 }
 
-func StringsToTileEffects(effectStrings []string) ([]TileEffect, error) {
-	var effects []TileEffect
+func StringsToTileEffects(effectStrings []string) ([]game.TileEffect, error) {
+	var effects []game.TileEffect
 	for _, effectStr := range effectStrings {
 		effect, err := StringToTileEffect(effectStr)
 		if err != nil {
@@ -92,9 +75,4 @@ func StringsToTileEffects(effectStrings []string) ([]TileEffect, error) {
 		effects = append(effects, effect)
 	}
 	return effects, nil
-}
-
-// HasTileEffect Function to check if a tile effect includes a specific effect
-func (t TileEffect) HasTileEffect(effect TileEffect) bool {
-	return t&effect != 0
 }

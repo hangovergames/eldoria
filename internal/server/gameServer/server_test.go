@@ -3,6 +3,8 @@
 package gameServer
 
 import (
+	"github.com/hangovergames/eldoria/internal/server/api/index"
+	"github.com/hangovergames/eldoria/internal/server/game/mocks"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -11,7 +13,9 @@ import (
 
 func TestServer_Start(t *testing.T) {
 
-	s := NewServer(":8080")
+	ruleset := mocks.NewMockRuleset()
+
+	s := NewServer(":8080", ruleset)
 	go func() {
 		if err := s.Start(); err != nil {
 			t.Errorf("Failed to start gameServer: %v", err)
@@ -38,27 +42,37 @@ func TestServer_Start(t *testing.T) {
 }
 
 func TestResponseHandler(t *testing.T) {
-	mh := &mockHandler{}
-	handler := responseHandler(mh.Serve)
 
-	// Create a test gameServer with the handler.
+	// Create a MockServer.
+	mockServer := &mocks.MockServer{}
+
+	// If you're testing handlers that use the ruleset, provide a mock IRuleset too.
+	mockRuleset := &mocks.MockRuleset{}
+	mockServer.Ruleset = mockRuleset
+
+	// Handler that we want to test.
+	handler := responseHandler(index.Index, mockServer)
+
+	// Create a test server with the handler.
 	ts := httptest.NewServer(handler)
 	defer ts.Close()
 
-	// Make a request to the test gameServer.
+	// Make a request to the test server.
 	res, err := http.Get(ts.URL)
 	if err != nil {
 		t.Fatalf("Failed to make request: %v", err)
 	}
 	defer res.Body.Close()
 
-	// Verify the handler was called.
-	if !mh.called {
-		t.Errorf("Expected mock handler to be called")
-	}
+	// Verify that your server methods were called as expected.
+	mockServer.AssertExpectations(t)
+	// Here you might also want to verify that the ruleset methods were called, if applicable.
+	mockRuleset.AssertExpectations(t)
 
-	// Here you might also want to verify the response and request objects
-	// However, since they are interfaces, you'd typically check for expected behavior
-	// rather than direct object inspection. This might involve mocking the Response
-	// and Request interfaces to track method calls or inspect passed values.
+	// Further assertions can be made based on the response.
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("Expected status OK, got: %v", res.Status)
+	}
+	// Additional assertions can be made on the response body if necessary.
+
 }

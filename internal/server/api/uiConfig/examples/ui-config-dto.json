@@ -19,14 +19,14 @@
       "startY": 210
     }
   ],
-  "spriteConfigs": [
+  "sprites": [
     {"name": "ShallowOcean", "sheetName":  "OceanTiles", "index": 0},
     {"name": "DeepOcean", "sheetName":  "OceanTiles", "index": 10},
     {"name": "Grassland", "sheetName":  "Tiles", "index": 2}
   ],
-  "tileConfigs": [
+  "tiles": [
     {
-      "tileName": "DeepOcean",
+      "name": "DeepOcean",
       "sprites": [
         {"name": "DeepOcean", "xOffset": 0, "yOffset": 0},
         {"name": "DeepOcean", "xOffset": 15, "yOffset": 0},
@@ -35,7 +35,7 @@
       ]
     },
     {
-      "tileName": "Grassland",
+      "name": "Grassland",
       "sprites": [
         {"name": "Grassland", "xOffset": 0, "yOffset": 0}
       ]

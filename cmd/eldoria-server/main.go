@@ -4,18 +4,25 @@ package main
 
 import (
 	"fmt"
-	server2 "github.com/hangovergames/eldoria/internal/server/gameServer"
 	"log"
+
+	"github.com/hangovergames/eldoria/internal/server/gameRuleset"
+	"github.com/hangovergames/eldoria/internal/server/gameServer"
 )
 
 const PORT = "8080"
 
 func main() {
 
+	ruleset, err := gameRuleset.LoadRuleset("./ruleset/default")
+	if err != nil {
+		log.Fatalf("failed to load ruleset: %v", err)
+	}
+
 	// Start the HTTP gameServer.
 	address := fmt.Sprintf(":%s", PORT)
 
-	server := server2.NewServer(address)
+	server := gameServer.NewServer(address, &ruleset)
 
 	if err := server.Start(); err != nil {
 		log.Fatal(err)
