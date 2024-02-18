@@ -5,7 +5,7 @@ package apiClient
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/hangovergames/eldoria/internal/common/dtos"
@@ -47,7 +47,7 @@ func (client *APIClient) FetchUIConfigDTO() (*dtos.UIConfigDTO, error) {
 	}
 
 	// Read the response body
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response body: %v", err)
 	}
