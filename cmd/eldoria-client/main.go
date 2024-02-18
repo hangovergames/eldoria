@@ -4,7 +4,8 @@ package main
 
 import (
 	"bytes"
-	"github.com/hangovergames/eldoria/internal/common/dtos"
+	"fmt"
+	"github.com/hangovergames/eldoria/internal/common/apiClient"
 	"image"
 	_ "image/png"
 	"log"
@@ -30,7 +31,9 @@ var (
 
 func init() {
 
-	imageManager = imageutils.NewImageManager()
+}
+
+func main() {
 
 	// Decode an image from the image file's byte slice.
 	img, _, err := image.Decode(bytes.NewReader(images.Tiles_png))
@@ -38,9 +41,16 @@ func init() {
 		log.Fatal(err)
 	}
 
-	uiConfig := dtos.LoadUIConfigDTO("./examples/ui-config-dto.json")
-
+	imageManager = imageutils.NewImageManager()
 	imageManager.RegisterImage("freeciv/data/trident/tiles.png", ebiten.NewImageFromImage(img))
+
+	client := apiClient.NewAPIClient("http://localhost:8080")
+
+	uiConfig, err := client.FetchUIConfigDTO()
+	if err != nil {
+		fmt.Printf("Error fetching UI config: %v\n", err)
+		return
+	}
 
 	spriteManager := spriteutils.NewSpriteManager(imageManager)
 	spriteManager.LoadSpriteSheetDTOs(uiConfig.SpriteSheets)
@@ -49,13 +59,10 @@ func init() {
 	tileMap := uiMap.NewTileGrid(spriteManager, 10, 10)
 	tileMap.LoadTileConfigDTOs(uiConfig.TileConfigs)
 
+	// Draw tiles
 	tileMap.SetTile(5, 5, "Grassland")
 
 	gameUI = gameui.NewGameUI(screenWidth, screenHeight, tileMap)
-
-}
-
-func main() {
 
 	ebiten.SetWindowSize(screenWidth*2, screenHeight*2)
 	ebiten.SetWindowTitle("Eldoria (Client)")

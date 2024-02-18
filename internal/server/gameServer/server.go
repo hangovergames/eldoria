@@ -5,6 +5,7 @@ package gameServer
 import (
 	"fmt"
 	"github.com/hangovergames/eldoria/internal/server/api/index"
+	"github.com/hangovergames/eldoria/internal/server/api/uiConfig"
 	"github.com/hangovergames/eldoria/internal/server/apiRequests"
 	"github.com/hangovergames/eldoria/internal/server/apiResponses"
 	"log"
@@ -29,6 +30,7 @@ func NewServer(address string) *Server {
 // SetupRoutes Define HTTP routes.
 func (s *Server) SetupRoutes() {
 	http.HandleFunc("/", responseHandler(index.Index))
+	http.HandleFunc("/ui/config", responseHandler(uiConfig.UIConfig))
 }
 
 // Start begins listening on the specified port and starts handling incoming requests.

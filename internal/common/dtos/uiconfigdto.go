@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 // SpriteSheetDTO represents the configuration for a sprite sheet.
@@ -46,7 +47,16 @@ type UIConfigDTO struct {
 	TileConfigs   []TileConfigDTO   `json:"tileConfigs"`
 }
 
-func LoadUIConfigDTO(configPath string) UIConfigDTO {
+func LoadUIConfigDTO(relativeConfigPath string) UIConfigDTO {
+
+	// Get the current working directory
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("Failed to get working directory: %v", err)
+	}
+
+	// Construct the path to the configuration file
+	configPath := filepath.Join(wd, relativeConfigPath)
 
 	// Read the JSON file
 	data, err := os.ReadFile(configPath)
@@ -59,6 +69,8 @@ func LoadUIConfigDTO(configPath string) UIConfigDTO {
 	if err := json.Unmarshal(data, &config); err != nil {
 		log.Fatalf("Failed to parse configuration JSON: %v", err)
 	}
+
+	log.Println("Returning: ", config)
 
 	return config
 }
