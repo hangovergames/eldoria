@@ -3,6 +3,7 @@
 package mocks
 
 import (
+	"github.com/hangovergames/eldoria/internal/common/dtos"
 	"github.com/hangovergames/eldoria/internal/server/game"
 	"github.com/stretchr/testify/mock"
 )
@@ -50,4 +51,12 @@ func NewMockRuleset() *MockRuleset {
 	// mockRuleset.On("FindTileType", "Grassland").Return(TileType(1), true)
 	// Adjust according to your test scenarios
 	return mockRuleset
+}
+
+// GetUI simulates getting the UI configuration.
+func (m *MockRuleset) GetUI() dtos.UIConfigDTO {
+	args := m.Called()
+	// Ensure that you return a UIConfigDTO type.
+	// This might require setting up the return value in your test setup.
+	return args.Get(0).(dtos.UIConfigDTO) // Cast the return value to dtos.UIConfigDTO
 }

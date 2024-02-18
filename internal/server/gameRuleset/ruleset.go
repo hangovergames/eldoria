@@ -4,6 +4,8 @@ package gameRuleset
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"path/filepath"
 
 	"github.com/hangovergames/eldoria/internal/common/dtos"
@@ -23,6 +25,16 @@ type Ruleset struct {
 
 // LoadRuleset combines loading of RulesetFile and TilesFile into a single Ruleset struct.
 func LoadRuleset(rulesetPath string) (Ruleset, error) {
+
+	// Check if the path is already absolute
+	if !filepath.IsAbs(rulesetPath) {
+		// If not, prepend the working directory
+		wd, err := os.Getwd()
+		if err != nil {
+			log.Fatalf("Failed to get working directory: %v", err)
+		}
+		rulesetPath = filepath.Join(wd, rulesetPath)
+	}
 
 	// Load the basic gameRuleset
 	rulesetFilePath := filepath.Join(rulesetPath, "ruleset.yml")
@@ -58,6 +70,7 @@ func LoadRuleset(rulesetPath string) (Ruleset, error) {
 	if err != nil {
 		return Ruleset{}, fmt.Errorf("failed to load %s: %w", uiFilePath, err)
 	}
+	log.Println("ui = ", uiFile)
 
 	// Combine the loaded data into a single Ruleset struct
 	ruleset := Ruleset{
@@ -157,4 +170,8 @@ func (r *Ruleset) ConvertAndCombineTileEffects(effectStrings []string) (game.Til
 	// Combine all enabled effects for this tile.
 	combinedEffects := gameMap.CombineTileEffects(effects)
 	return combinedEffects, nil
+}
+
+func (r *Ruleset) GetUI() dtos.UIConfigDTO {
+	return r.UI
 }

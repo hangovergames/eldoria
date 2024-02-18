@@ -5,6 +5,7 @@ package gameRuleset
 import (
 	"github.com/hangovergames/eldoria/internal/common/testutils"
 	"github.com/hangovergames/eldoria/internal/server/game"
+	"log"
 	"testing"
 )
 
@@ -13,6 +14,8 @@ func TestLoadRuleset(t *testing.T) {
 	// Create a temporary directory for the test environment
 	dirPath, cleanupDir := testutils.CreateTempDir(t)
 	defer cleanupDir()
+
+	log.Printf("dirPath = %s", dirPath)
 
 	// Create ruleset.yml
 	rulesetContent := `tiles:
@@ -89,21 +92,21 @@ effects:
 	uiContent := `
 spriteSheets:
 
-  Tiles:
-    image: "freeciv/data/trident/tiles.png"
-    tileWidth: 30
-    tileHeight: 30
-    tilesPerRow: 20
-    startX: 0
-    startY: 0
+- name: Tiles
+  image: "freeciv/data/trident/tiles.png"
+  tileWidth: 30
+  tileHeight: 30
+  tilesPerRow: 20
+  startX: 0
+  startY: 0
 
-  OceanTiles:
-    image: "freeciv/data/trident/tiles.png"
-    tileWidth: 15
-    tileHeight: 15
-    tilesPerRow: 32
-    startX: 0
-    startY: 210
+- name: OceanTiles
+  image: "freeciv/data/trident/tiles.png"
+  tileWidth: 15
+  tileHeight: 15
+  tilesPerRow: 32
+  startX: 0
+  startY: 210
 
 sprites:
 

@@ -2,6 +2,10 @@
 
 package game
 
+import (
+	"github.com/hangovergames/eldoria/internal/common/dtos"
+)
+
 type TileType uint
 type ModifierType uint
 type TileEffect uint
@@ -27,6 +31,7 @@ type IRuleset interface {
 	CreateTileFromName(tileName string) (ITile, error)
 	IsEffectEnabled(effectStr string) bool
 	ConvertAndCombineTileEffects(effectStrings []string) (TileEffect, error)
+	GetUI() dtos.UIConfigDTO
 }
 
 // ITile defines the interface for operations on a Tile.

@@ -10,6 +10,7 @@ import (
 )
 
 func TestUIConfig(t *testing.T) {
+
 	tests := []struct {
 		name          string
 		requestMethod bool // true for GET, false otherwise
@@ -23,7 +24,70 @@ func TestUIConfig(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			mockResponse := &apiResponses.MockResponse{}
 			mockRequest := &apiRequests.MockRequest{IsGet: tt.requestMethod}
-			mockServer := mocks.NewMockServer()
+
+			// Mock Ruleset
+			mockRuleset := new(mocks.MockRuleset)
+			uiConfigDTO := dtos.UIConfigDTO{
+				SpriteSheets: []dtos.SpriteSheetDTO{
+					{
+						Name:        "Tiles",
+						Image:       "freeciv/data/trident/tiles.png",
+						TileWidth:   30,
+						TileHeight:  30,
+						TilesPerRow: 20,
+						StartX:      0,
+						StartY:      0,
+					},
+					{
+						Name:        "OceanTiles",
+						Image:       "freeciv/data/trident/tiles.png",
+						TileWidth:   15,
+						TileHeight:  15,
+						TilesPerRow: 32,
+						StartX:      0,
+						StartY:      210,
+					},
+				},
+				SpriteConfigs: []dtos.SpriteConfigDTO{
+					{
+						Name:      "ShallowOcean",
+						SheetName: "OceanTiles",
+						Index:     0,
+					},
+					{
+						Name:      "DeepOcean",
+						SheetName: "OceanTiles",
+						Index:     10,
+					},
+					{
+						Name:      "Grassland",
+						SheetName: "Tiles",
+						Index:     2,
+					},
+				},
+				TileConfigs: []dtos.TileConfigDTO{
+					{
+						TileName: "DeepOcean",
+						Sprites: []dtos.SpriteDTO{
+							{Name: "DeepOcean", XOffset: 0, YOffset: 0},
+							{Name: "DeepOcean", XOffset: 15, YOffset: 0},
+							{Name: "DeepOcean", XOffset: 0, YOffset: 15},
+							{Name: "DeepOcean", XOffset: 15, YOffset: 15},
+						},
+					},
+					{
+						TileName: "Grassland",
+						Sprites: []dtos.SpriteDTO{
+							{Name: "Grassland", XOffset: 0, YOffset: 0},
+						},
+					},
+				},
+			}
+			mockRuleset.On("GetUI").Return(uiConfigDTO) // Setup expectation
+
+			// Mock Server
+			mockServer := new(mocks.MockServer)
+			mockServer.On("GetRuleset").Return(mockRuleset) // Setup expectation
 
 			UIConfig(mockResponse, mockRequest, mockServer)
 
