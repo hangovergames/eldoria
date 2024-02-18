@@ -12,6 +12,7 @@ type MockServer struct {
 	mock.Mock
 	Address string
 	Ruleset game.IRuleset
+	State   game.IGameState
 }
 
 // Start simulates starting the server. It doesn't do anything in the mock.
@@ -29,6 +30,12 @@ func (m *MockServer) SetupRoutes() {
 func (m *MockServer) GetAddress() string {
 	args := m.Called()
 	return args.String(0) // Return the Address field or a test-specific address
+}
+
+// GetState returns a mock server address.
+func (m *MockServer) GetState() game.IGameState {
+	args := m.Called()
+	return args.Get(0).(game.IGameState) // Ensure your tests set this up correctly
 }
 
 // GetRuleset returns a mock ruleset.

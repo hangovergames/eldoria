@@ -3,21 +3,22 @@
 package index
 
 import (
-	"github.com/hangovergames/eldoria/internal/server/apiRequests"
-	"github.com/hangovergames/eldoria/internal/server/apiResponses"
+	"github.com/hangovergames/eldoria/internal/common/dtos"
+	"github.com/hangovergames/eldoria/internal/server/apirequests"
+	"github.com/hangovergames/eldoria/internal/server/apiresponses"
 	"github.com/hangovergames/eldoria/internal/server/game"
 	"net/http"
 )
 
 // Index handles the GET requests at the root URL.
-func Index(response apiResponses.Response, request apiRequests.Request, server game.IServer) {
+func Index(response apiresponses.Response, request apirequests.Request, server game.IServer) {
 
 	if !request.IsMethodGet() {
 		response.SendMethodNotSupportedError()
 		return
 	}
 
-	data := newIndexDTO("0.0.1")
+	data := dtos.NewIndexDTO("0.0.1")
 
 	response.Send(http.StatusOK, data)
 

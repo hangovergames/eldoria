@@ -6,6 +6,7 @@ import (
 	"github.com/hangovergames/eldoria/internal/common/dtos"
 )
 
+type PlayerID uint
 type TileType uint
 type ModifierType uint
 type TileEffect uint
@@ -22,6 +23,7 @@ type IServer interface {
 	SetupRoutes()
 	GetAddress() string
 	GetRuleset() IRuleset
+	GetState() IGameState
 }
 
 // IRuleset defines the methods that the Ruleset needs to expose to external consumers.
@@ -48,4 +50,60 @@ type ITile interface {
 
 	// Clone creates and returns a deep copy of the tile.
 	Clone() ITile
+}
+
+// IGameMap defines the interface for interacting with a game map.
+type IGameMap interface {
+	GetWidth() int
+	GetHeight() int
+
+	// GetTile returns the tile at the given coordinates.
+	GetTile(x, y int) (ITile, error)
+
+	// SetTile sets a tile at the given coordinates.
+	SetTile(x, y int, newTile ITile) error
+
+	// GetTilesInArea returns a 2D slice of tiles within the specified rectangular area.
+	GetTilesInArea(x, y, x2, y2 int) ([][]ITile, error)
+}
+
+// IPlayer defines the interface for interacting with a player.
+type IPlayer interface {
+	// GetID returns the player's ID.
+	GetID() PlayerID
+
+	// GetName returns the player's name.
+	GetName() string
+
+	// SetName sets the player's name.
+	SetName(name string)
+
+	// GetResources returns the player's resources.
+	GetResources() map[string]int
+
+	// AddResource adds a specified amount of a resource to the player's inventory.
+	AddResource(resource string, amount int)
+
+	// SubtractResource subtracts a specified amount of a resource from the player's inventory.
+	SubtractResource(resource string, amount int)
+}
+
+// IGameState defines the interface for interacting with the game state.
+type IGameState interface {
+
+	// GetMap returns the current game map.
+	GetMap() IGameMap
+
+	// GetPlayers returns a list of all players in the game state.
+	GetPlayers() []IPlayer
+
+	// AddPlayer adds a new player to the game state.
+	//AddPlayer(player gamePlayer.Player)
+
+	// RemovePlayer removes a player from the game state by their identifier.
+	//RemovePlayer(name string)
+
+	// UpdatePlayer updates a player's information in the game state.
+	//UpdatePlayer(player gamePlayer.Player)
+
 }

@@ -3,15 +3,12 @@
 package imageutils
 
 import (
+	"bytes"
 	"github.com/hajimehoshi/ebiten/v2"
 	"image"
 	"log"
 	"os"
 )
-
-type IImageManager interface {
-	GetImage(name string) *ebiten.Image
-}
 
 // ImageManager manages the storage and retrieval of ebiten.Images by name.
 type ImageManager struct {
@@ -31,6 +28,16 @@ func (im *ImageManager) RegisterImage(name string, img *ebiten.Image) {
 		log.Fatal("RegisterImage called with null image")
 	}
 	im.images[name] = img
+}
+
+// RegisterImageBytes registers an image from a byte slice.
+func (im *ImageManager) RegisterImageBytes(name string, imageBytes []byte) {
+	img, _, err := image.Decode(bytes.NewReader(imageBytes))
+	if err != nil {
+		log.Fatalf("Failed to decode image bytes for %s: %v", name, err)
+	}
+	ebitenImage := ebiten.NewImageFromImage(img)
+	im.images[name] = ebitenImage
 }
 
 // GetImage retrieves an *ebiten.Image by name.

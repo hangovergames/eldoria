@@ -3,8 +3,9 @@
 package index
 
 import (
-	"github.com/hangovergames/eldoria/internal/server/apiRequests"
-	"github.com/hangovergames/eldoria/internal/server/apiResponses"
+	"github.com/hangovergames/eldoria/internal/common/dtos"
+	"github.com/hangovergames/eldoria/internal/server/apirequests"
+	"github.com/hangovergames/eldoria/internal/server/apiresponses"
 	"github.com/hangovergames/eldoria/internal/server/game/mocks"
 	"testing"
 )
@@ -22,8 +23,8 @@ func TestIndex(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockResponse := &apiResponses.MockResponse{}
-			mockRequest := &apiRequests.MockRequest{IsGet: tt.requestMethod}
+			mockResponse := &apiresponses.MockResponse{}
+			mockRequest := &apirequests.MockRequest{IsGet: tt.requestMethod}
 			mockServer := mocks.NewMockServer()
 
 			Index(mockResponse, mockRequest, mockServer)
@@ -36,7 +37,7 @@ func TestIndex(t *testing.T) {
 				if mockResponse.SentStatusCode != 200 {
 					t.Errorf("Expected status code 200, got %d", mockResponse.SentStatusCode)
 				}
-				if data, ok := mockResponse.SentData.(IndexDTO); !ok || data.Version != "0.0.1" {
+				if data, ok := mockResponse.SentData.(dtos.IndexDTO); !ok || data.Version != "0.0.1" {
 					t.Errorf("Expected data version 0.0.1, got %v", mockResponse.SentData)
 				}
 			}

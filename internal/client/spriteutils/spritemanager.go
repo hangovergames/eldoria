@@ -4,7 +4,7 @@ package spriteutils
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hangovergames/eldoria/internal/client/imageutils"
+	"github.com/hangovergames/eldoria/internal/client/ui"
 	"github.com/hangovergames/eldoria/internal/common/dtos"
 	"log"
 )
@@ -22,11 +22,11 @@ type ISpriteManager interface {
 type SpriteManager struct {
 	sheets       map[string]*SpriteSheet      // Map of sprite sheet names to SpriteSheet instances.
 	mapping      map[string]*SpriteIdentifier // Map of sprite names to their identifiers (sheet name and index).
-	imageManager imageutils.IImageManager     // Image manager
+	imageManager ui.IImageManager             // Image manager
 }
 
 // NewSpriteManager creates a new instance of SpriteManager.
-func NewSpriteManager(imageManager imageutils.IImageManager) *SpriteManager {
+func NewSpriteManager(imageManager ui.IImageManager) *SpriteManager {
 	return &SpriteManager{
 		sheets:       make(map[string]*SpriteSheet),
 		mapping:      make(map[string]*SpriteIdentifier),

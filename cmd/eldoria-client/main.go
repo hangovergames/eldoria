@@ -3,10 +3,12 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"github.com/hangovergames/eldoria/internal/common/apiClient"
-	"image"
+	"github.com/hangovergames/eldoria/internal/client/fontutils"
+	"github.com/hangovergames/eldoria/internal/client/screens/loginscreen"
+	"github.com/hangovergames/eldoria/internal/client/ui"
+	"github.com/hangovergames/eldoria/internal/common/assets"
+	"github.com/hangovergames/eldoria/internal/common/assets/fonts"
 	_ "image/png"
 	"log"
 
@@ -16,12 +18,10 @@ import (
 	"github.com/hangovergames/eldoria/internal/client/gameui"
 	"github.com/hangovergames/eldoria/internal/client/imageutils"
 	"github.com/hangovergames/eldoria/internal/client/spriteutils"
-	"github.com/hangovergames/eldoria/internal/client/ui/uiMap"
-)
+	"github.com/hangovergames/eldoria/internal/client/uimap"
+	"github.com/hangovergames/eldoria/internal/common/apiClient"
 
-const (
-	screenWidth  = 800
-	screenHeight = 600
+	"github.com/hangovergames/eldoria/internal/client/screens/mapScreen"
 )
 
 var (
@@ -35,79 +35,28 @@ func init() {
 
 func main() {
 
-	// Decode an image from the image file's byte slice.
-	TilesPngImg, _, err := image.Decode(bytes.NewReader(images.Tiles_png))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Decode an image from the image file's byte slice.
-	UnitsPngImg, _, err := image.Decode(bytes.NewReader(images.Units_png))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Decode an image from the image file's byte slice.
-	ExtraUnitsPngImg, _, err := image.Decode(bytes.NewReader(images.ExtraUnits_png))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Decode an image from the image file's byte slice.
-	FogPngImg, _, err := image.Decode(bytes.NewReader(images.Fog_png))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Decode an image from the image file's byte slice.
-	SelectPngImg, _, err := image.Decode(bytes.NewReader(images.Select_png))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Decode an image from the image file's byte slice.
-	RoadsPngImg, _, err := image.Decode(bytes.NewReader(images.Roads_png))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Decode an image from the image file's byte slice.
-	GridPngImg, _, err := image.Decode(bytes.NewReader(images.Grid_png))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Decode an image from the image file's byte slice.
-	ExplosionsPngImg, _, err := image.Decode(bytes.NewReader(images.Explosions_png))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Decode an image from the image file's byte slice.
-	EarthPngImg, _, err := image.Decode(bytes.NewReader(images.Earth_png))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Decode an image from the image file's byte slice.
-	CitiesPngImg, _, err := image.Decode(bytes.NewReader(images.Cities_png))
-	if err != nil {
-		log.Fatal(err)
-	}
+	fontManager := fontutils.NewFontManager()
+	fontManager.RegisterFontBytes(ui.IndieFlowerFontName, fonts.IndieFlower_Regular_ttf)
+	fontManager.RegisterFontBytes(ui.MagicSchoolFontName, fonts.MagicSchoolTwo_ttf)
+	fontManager.RegisterFontBytes(ui.PlayfairDisplayFontName, fonts.PlayfairDisplay_Regular_ttf)
+	fontManager.RegisterFontBytes(ui.PatrickHandFontName, fonts.PatrickHand_Regular_ttf)
+	fontManager.RegisterFontBytes(ui.OrbitronFontName, fonts.Orbitron_Regular_ttf)
+	fontManager.RegisterFontBytes(ui.MerriweatherFontName, fonts.Merriweather_Regular_ttf)
 
 	imageManager = imageutils.NewImageManager()
-	imageManager.RegisterImage("freeciv/data/trident/tiles.png", ebiten.NewImageFromImage(TilesPngImg))
-	imageManager.RegisterImage("freeciv/data/trident/units.png", ebiten.NewImageFromImage(UnitsPngImg))
-	imageManager.RegisterImage("freeciv/data/trident/extra_units.png", ebiten.NewImageFromImage(ExtraUnitsPngImg))
-	imageManager.RegisterImage("freeciv/data/trident/fog.png", ebiten.NewImageFromImage(FogPngImg))
-	imageManager.RegisterImage("freeciv/data/trident/select.png", ebiten.NewImageFromImage(SelectPngImg))
-	imageManager.RegisterImage("freeciv/data/trident/roads.png", ebiten.NewImageFromImage(RoadsPngImg))
-	imageManager.RegisterImage("freeciv/data/trident/grid.png", ebiten.NewImageFromImage(GridPngImg))
-	imageManager.RegisterImage("freeciv/data/trident/explosions.png", ebiten.NewImageFromImage(ExplosionsPngImg))
-	imageManager.RegisterImage("freeciv/data/trident/earth.png", ebiten.NewImageFromImage(EarthPngImg))
-	imageManager.RegisterImage("freeciv/data/trident/cities.png", ebiten.NewImageFromImage(CitiesPngImg))
+	imageManager.RegisterImageBytes("freeciv/data/trident/tiles.png", images.Tiles_png)
+	imageManager.RegisterImageBytes("freeciv/data/trident/units.png", images.Units_png)
+	imageManager.RegisterImageBytes("freeciv/data/trident/extra_units.png", images.ExtraUnits_png)
+	imageManager.RegisterImageBytes("freeciv/data/trident/fog.png", images.Fog_png)
+	imageManager.RegisterImageBytes("freeciv/data/trident/select.png", images.Select_png)
+	imageManager.RegisterImageBytes("freeciv/data/trident/roads.png", images.Roads_png)
+	imageManager.RegisterImageBytes("freeciv/data/trident/grid.png", images.Grid_png)
+	imageManager.RegisterImageBytes("freeciv/data/trident/explosions.png", images.Explosions_png)
+	imageManager.RegisterImageBytes("freeciv/data/trident/earth.png", images.Earth_png)
+	imageManager.RegisterImageBytes("freeciv/data/trident/cities.png", images.Cities_png)
+	imageManager.RegisterImageBytes(ui.LoginScreenBackgroundImage, assets.EldoriaLoginScreen_png)
 
-	client := apiClient.NewAPIClient("http://localhost:8080")
+	client := apiclient.NewAPIClient("http://localhost:8080")
 
 	uiConfig, err := client.FetchUIConfigDTO()
 	if err != nil {
@@ -119,15 +68,36 @@ func main() {
 	spriteManager.LoadSpriteSheetDTOs(uiConfig.SpriteSheets)
 	spriteManager.LoadSpriteConfigDTOs(uiConfig.SpriteConfigs)
 
-	tileMap := uiMap.NewTileGrid(spriteManager, 10, 10)
+	tileMap := uimap.NewTileGrid(spriteManager, 10, 10)
 	tileMap.LoadTileConfigDTOs(uiConfig.TileConfigs)
 
 	// Draw tiles
 	tileMap.SetTile(5, 5, "Grassland", "Warrior")
 
-	gameUI = gameui.NewGameUI(screenWidth, screenHeight, tileMap)
+	gameUI = gameui.NewGameUI(ui.InitialScreenWidth, ui.InitialScreenHeight, tileMap)
 
-	ebiten.SetWindowSize(screenWidth*2, screenHeight*2)
+	gameUI.RegisterScreen("Login", func() ui.IScreen {
+		return loginscreen.NewLoginScreen(
+			gameUI,
+			imageManager,
+			fontManager,
+			ui.LoginScreenBackgroundImage,
+			ui.LoginScreenFontName,
+			ui.LoginScreenFontSize,
+			ui.LoginScreenFontDPI,
+			ui.MinLoginNameLength,
+			ui.MaxLoginNameLength,
+			ui.AllowedLoginCharacters,
+		)
+	})
+
+	gameUI.RegisterScreen("Map", func() ui.IScreen {
+		return mapscreen.NewMapScreen(gameUI)
+	})
+
+	gameUI.SetCurrentScreen("Login")
+
+	ebiten.SetWindowSize(ui.InitialScreenWidth, ui.InitialScreenHeight)
 	ebiten.SetWindowTitle("Eldoria (Client)")
 	if err := ebiten.RunGame(gameUI); err != nil {
 		log.Fatal(err)

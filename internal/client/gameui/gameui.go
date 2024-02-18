@@ -3,44 +3,90 @@
 package gameui
 
 import (
-	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hangovergames/eldoria/internal/client/ui/uiMap"
+	"github.com/hangovergames/eldoria/internal/client/ui"
+	"log"
 )
 
 type GameUI struct {
 	ScreenWidth, ScreenHeight int
-	Map                       uiMap.ITileGrid
+	Map                       ui.ITileGrid
+	CurrentScreen             ui.IScreen
+	screens                   map[string]func() ui.IScreen
 }
 
 // NewGameUI creates a new instance of GameUI.
 func NewGameUI(
 	screenWidth, screenHeight int,
-	grid uiMap.ITileGrid,
+	grid ui.ITileGrid,
 ) *GameUI {
 	return &GameUI{
 		ScreenWidth:  screenWidth,
 		ScreenHeight: screenHeight,
 		Map:          grid,
+		screens:      make(map[string]func() ui.IScreen),
 	}
 }
 
+// RegisterScreen registers a screen constructor function under a given name.
+func (g *GameUI) RegisterScreen(name string, constructor func() ui.IScreen) {
+	g.screens[name] = constructor
+}
+
+// GetScreen retrieves a screen by name, instantiating it if necessary.
+func (g *GameUI) GetScreen(name string) ui.IScreen {
+	if screenConstructor, ok := g.screens[name]; ok {
+		// Instantiate the screen if it's not already active or if you want a new instance every time.
+		return screenConstructor()
+	}
+	// Handle the case where no screen is found for the given name, possibly returning nil or an error.
+	return nil
+}
+
 func (g *GameUI) Update() error {
+	if g.CurrentScreen != nil {
+		return g.CurrentScreen.Update()
+	}
 	return nil
 }
 
 func (g *GameUI) Draw(screen *ebiten.Image) {
-
-	// Render the map onto the screen
-	if g.Map != nil {
-		g.Map.Draw(screen, 30, 30)
+	if g.CurrentScreen != nil {
+		g.CurrentScreen.Draw(screen)
 	}
-
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS()))
-
 }
 
 func (g *GameUI) Layout(outsideWidth, outsideHeight int) (int, int) {
-	return g.ScreenWidth, g.ScreenHeight
+	if g.CurrentScreen != nil {
+		return g.CurrentScreen.Layout(outsideWidth, outsideHeight)
+	}
+	return g.GetScreenWidth(), g.GetScreenHeight()
+}
+
+func (g *GameUI) GetMap() ui.ITileGrid {
+	if g.CurrentScreen != nil {
+		return g.Map
+	}
+	return nil
+}
+
+func (g *GameUI) GetScreenWidth() int {
+	return g.ScreenWidth
+}
+
+func (g *GameUI) GetScreenHeight() int {
+	return g.ScreenHeight
+}
+
+func (g *GameUI) GetCurrentScreen() ui.IScreen {
+	return g.CurrentScreen
+}
+
+func (g *GameUI) SetCurrentScreen(name string) {
+	screen := g.GetScreen(name)
+	if screen != nil {
+		g.CurrentScreen = screen
+	} else {
+		log.Printf("Could not create a screen named %s", name)
+	}
 }
