@@ -3,18 +3,17 @@
 package uimap
 
 import (
+	"github.com/hangovergames/eldoria/internal/client/uimocks"
 	"github.com/hangovergames/eldoria/internal/common/dtos"
 	"github.com/stretchr/testify/assert"
 	"testing"
-
-	"github.com/hangovergames/eldoria/internal/client/spriteutils"
 )
 
 // TestDefineTileConfig tests the DefineTileConfig method of TileGrid.
 func TestDefineTileConfig(t *testing.T) {
 
 	// Initialize TileGrid with a mock sprite manager and dimensions.
-	mockSpriteManager := &spriteutils.MockSpriteManager{}
+	mockSpriteManager := &uimocks.MockSpriteManager{}
 	uiMap := NewTileGrid(mockSpriteManager, 10, 10) // Assume a constructor NewTileGrid exists.
 
 	// Define a tile configuration.
@@ -50,7 +49,7 @@ func TestDefineTileConfig(t *testing.T) {
 func TestLoadTileConfigDTOs(t *testing.T) {
 
 	// Create a mock sprite manager
-	mockSpriteManager := new(spriteutils.MockSpriteManager)
+	mockSpriteManager := new(uimocks.MockSpriteManager)
 
 	// Create a TileGrid with the mock sprite manager
 	width, height := 10, 10

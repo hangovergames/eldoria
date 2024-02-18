@@ -1,15 +1,17 @@
 // Copyright (c) 2024. Hangover Games <info@hangover.games>. All rights reserved.
 
-package loginscreen
+package uifields
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"github.com/hangovergames/eldoria/internal/client/drawutils"
-	"github.com/hangovergames/eldoria/internal/client/ui"
 	"golang.org/x/image/font"
 	"image/color"
 	"strings"
+
+	"github.com/hajimehoshi/ebiten/v2"
+
+	"github.com/hangovergames/eldoria/internal/client/drawutils"
+	"github.com/hangovergames/eldoria/internal/client/ui"
+	"github.com/hangovergames/eldoria/internal/client/uikeys"
 )
 
 type TextField struct {
@@ -33,6 +35,12 @@ type TextField struct {
 	Placeholder         string      // Placeholder text
 	PlaceholderColor    color.Color // Color of the placeholder text
 
+	Keyboard ui.IKeyboard
+}
+
+// Add a method to set the keyboard, similar to how you set the font and placeholder font.
+func (tf *TextField) SetKeyboard(keyboard ui.IKeyboard) {
+	tf.Keyboard = keyboard
 }
 
 func (tf *TextField) SetFont(fontName string, size float64, dpi float64, clr color.Color) {
@@ -53,11 +61,15 @@ func (tf *TextField) Update() {
 		return
 	}
 
+	if tf.Keyboard == nil {
+		tf.Keyboard = &uikeys.EbitenKeyboard{}
+	}
+
 	// Create a buffer for input characters with a reasonable initial capacity
 	inputChars := make([]rune, 0, 24)
 
 	// Append new characters typed during this frame to the buffer
-	inputChars = ebiten.AppendInputChars(inputChars)
+	inputChars = tf.Keyboard.AppendInputChars(inputChars)
 
 	// Append new characters typed
 	for _, c := range inputChars {
@@ -67,7 +79,7 @@ func (tf *TextField) Update() {
 	}
 
 	// Update the backspace press duration
-	if ebiten.IsKeyPressed(ebiten.KeyBackspace) {
+	if tf.Keyboard.IsKeyPressed(ebiten.KeyBackspace) {
 		tf.BackspacePressDuration++
 	} else {
 		tf.BackspacePressDuration = 0
@@ -83,7 +95,7 @@ func (tf *TextField) Update() {
 	}
 
 	// Check if the Enter key is pressed
-	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) && len(tf.Text) >= tf.MinLength && tf.OnEnter != nil {
+	if tf.Keyboard.IsKeyJustPressed(ebiten.KeyEnter) && len(tf.Text) >= tf.MinLength && tf.OnEnter != nil {
 		tf.OnEnter()
 	}
 

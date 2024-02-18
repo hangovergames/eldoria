@@ -4,7 +4,7 @@ package uimap
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hangovergames/eldoria/internal/client/spriteutils"
+	"github.com/hangovergames/eldoria/internal/client/ui"
 	"github.com/hangovergames/eldoria/internal/common/dtos"
 )
 
@@ -20,7 +20,7 @@ type TileConfig struct {
 
 // TileGrid represents the UI component for drawing a map.
 type TileGrid struct {
-	spriteManager spriteutils.ISpriteManager
+	spriteManager ui.ISpriteManager
 	width, height int                 // Map size in tiles.
 	tileMappings  map[uint]TileConfig // Mapping from tile type to visual configuration.
 	mapGrid       [][][]uint          // Grid defining the tile type at each position.
@@ -29,7 +29,7 @@ type TileGrid struct {
 }
 
 // NewTileGrid creates a new instance of TileGrid. Each tile will be 0.
-func NewTileGrid(spriteManager spriteutils.ISpriteManager, width, height int) *TileGrid {
+func NewTileGrid(spriteManager ui.ISpriteManager, width, height int) *TileGrid {
 
 	// Initialize the map grid with the specified dimensions.
 	mapGrid := make([][][]uint, height)

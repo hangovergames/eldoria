@@ -1,6 +1,6 @@
 // Copyright (c) 2024. Hangover Games <info@hangover.games>. All rights reserved.
 
-package mocks
+package uimocks
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"

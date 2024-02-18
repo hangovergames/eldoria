@@ -5,12 +5,11 @@ package gameui
 import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hangovergames/eldoria/internal/client/ui"
+	"github.com/hangovergames/eldoria/internal/client/uimocks"
 	"github.com/stretchr/testify/mock"
 	"testing"
 
 	"github.com/hangovergames/eldoria/internal/client/uimap"
-
-	"github.com/hangovergames/eldoria/internal/client/ui/mocks"
 )
 
 func TestGameUIDraw(t *testing.T) {
@@ -18,7 +17,7 @@ func TestGameUIDraw(t *testing.T) {
 	// Create a mock TileGrid
 	mockGrid := new(uimap.MockTileGrid)
 
-	mockScreen := new(mocks.MockScreen)
+	mockScreen := new(uimocks.MockScreen)
 	// Set expectation
 	mockScreen.On("Draw", mock.AnythingOfType("*ebiten.Image")).Once()
 

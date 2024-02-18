@@ -7,6 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hangovergames/eldoria/internal/client/ui"
+	"github.com/hangovergames/eldoria/internal/client/uifields"
 	"image/color"
 	"strings"
 )
@@ -16,7 +17,7 @@ type LoginScreen struct {
 	ImageManager        ui.IImageManager
 	BackgroundImageName string
 	ShowPopup           bool
-	UsernameField       TextField
+	UsernameField       uifields.TextField
 	FontManager         ui.IFontManager
 	FontName            string
 	FontSize            float64
@@ -44,7 +45,7 @@ func NewLoginScreen(
 		FontManager:         fontManager,
 		BackgroundImageName: backgroundImageName,
 		ShowPopup:           false,
-		UsernameField: TextField{
+		UsernameField: uifields.TextField{
 			MinLength:           minLoginLength,
 			MaxLength:           maxLoginLength,
 			X:                   0,

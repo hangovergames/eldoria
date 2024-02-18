@@ -9,33 +9,24 @@ import (
 	"log"
 )
 
-// ISpriteManager defines the behavior for managing sprites.
-type ISpriteManager interface {
-	GetSprite(name string) *ebiten.Image
-	RegisterSpriteSheet(name string, sheet *SpriteSheet)
-	MapSpriteName(name string, sheetName string, index int)
-	LoadSpriteSheetDTOs(spriteSheets []dtos.SpriteSheetDTO)
-	LoadSpriteConfigDTOs(spriteConfigs []dtos.SpriteConfigDTO)
-}
-
 // SpriteManager manages multiple SpriteSheets and provides an easy way to retrieve sprites by name.
 type SpriteManager struct {
-	sheets       map[string]*SpriteSheet      // Map of sprite sheet names to SpriteSheet instances.
-	mapping      map[string]*SpriteIdentifier // Map of sprite names to their identifiers (sheet name and index).
-	imageManager ui.IImageManager             // Image manager
+	sheets       map[string]ui.ISpriteSheet      // Map of sprite sheet names to SpriteSheet instances.
+	mapping      map[string]ui.ISpriteIdentifier // Map of sprite names to their identifiers (sheet name and index).
+	imageManager ui.IImageManager                // Image manager
 }
 
 // NewSpriteManager creates a new instance of SpriteManager.
 func NewSpriteManager(imageManager ui.IImageManager) *SpriteManager {
 	return &SpriteManager{
-		sheets:       make(map[string]*SpriteSheet),
-		mapping:      make(map[string]*SpriteIdentifier),
+		sheets:       make(map[string]ui.ISpriteSheet),
+		mapping:      make(map[string]ui.ISpriteIdentifier),
 		imageManager: imageManager,
 	}
 }
 
 // RegisterSpriteSheet associates a SpriteSheet with a name within the manager.
-func (sm *SpriteManager) RegisterSpriteSheet(name string, sheet *SpriteSheet) {
+func (sm *SpriteManager) RegisterSpriteSheet(name string, sheet ui.ISpriteSheet) {
 	sm.sheets[name] = sheet
 }
 
@@ -54,11 +45,11 @@ func (sm *SpriteManager) GetSprite(name string) *ebiten.Image {
 	if !exists {
 		return nil
 	}
-	sheet, exists := sm.sheets[identifier.SheetName]
+	sheet, exists := sm.sheets[identifier.GetSheetName()]
 	if !exists {
 		return nil
 	}
-	return sheet.SubImage(identifier.Index)
+	return sheet.SubImage(identifier.GetIndex())
 }
 
 // LoadSpriteSheetDTOs loads sprite sheets defined in UIConfigDTO.

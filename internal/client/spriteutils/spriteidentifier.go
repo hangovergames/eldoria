@@ -18,3 +18,13 @@ func NewSpriteIdentifier(
 		Index:     index,
 	}
 }
+
+// GetSheetName returns the name of the sprite sheet.
+func (si *SpriteIdentifier) GetSheetName() string {
+	return si.SheetName
+}
+
+// GetIndex returns the index of the sprite within the sheet.
+func (si *SpriteIdentifier) GetIndex() int {
+	return si.Index
+}

@@ -3,13 +3,13 @@
 package spriteutils
 
 import (
-	"github.com/hangovergames/eldoria/internal/client/imageutils"
+	"github.com/hangovergames/eldoria/internal/client/uimocks"
 	"testing"
 )
 
 func TestSpriteManager(t *testing.T) {
 
-	mockImageManager := imageutils.NewMockImageManager()
+	mockImageManager := uimocks.NewMockImageManager()
 
 	spriteManager := NewSpriteManager(mockImageManager)
 
@@ -27,7 +27,7 @@ func TestSpriteManager(t *testing.T) {
 
 	// Test if the sprite name is correctly mapped
 	identifier, exists := spriteManager.mapping["testSprite"]
-	if !exists || identifier.SheetName != "testSheet" || identifier.Index != 0 {
+	if !exists || identifier.GetSheetName() != "testSheet" || identifier.GetIndex() != 0 {
 		t.Errorf("MapSpriteName failed to map the sprite name correctly")
 	}
 

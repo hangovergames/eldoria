@@ -50,3 +50,35 @@ type IFontManager interface {
 	// GetFace returns a font.Face for a registered font with the specified size and DPI.
 	GetFace(name string, size float64, dpi float64) font.Face
 }
+
+// IKeyboard defines an interface for keyboard input handling.
+type IKeyboard interface {
+	AppendInputChars(inputChars []rune) []rune
+	IsKeyPressed(key ebiten.Key) bool
+	IsKeyJustPressed(key ebiten.Key) bool
+}
+
+// ISpriteIdentifier defines the behavior for sprite identification and retrieval.
+type ISpriteIdentifier interface {
+
+	// GetSheetName returns the name of the sprite sheet.
+	GetSheetName() string
+
+	// GetIndex returns the index of the sprite within the sheet.
+	GetIndex() int
+}
+
+// ISpriteSheet defines the methods for interacting with sprite sheets.
+type ISpriteSheet interface {
+	// SubImage extracts a sub-image from the sprite sheet based on the tile index.
+	SubImage(index int) *ebiten.Image
+}
+
+// ISpriteManager defines the behavior for managing sprites.
+type ISpriteManager interface {
+	GetSprite(name string) *ebiten.Image
+	RegisterSpriteSheet(name string, sheet ISpriteSheet)
+	MapSpriteName(name string, sheetName string, index int)
+	LoadSpriteSheetDTOs(spriteSheets []dtos.SpriteSheetDTO)
+	LoadSpriteConfigDTOs(spriteConfigs []dtos.SpriteConfigDTO)
+}
