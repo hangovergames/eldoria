@@ -3,8 +3,6 @@ package uiconfig
 import (
 	"encoding/json"
 	"github.com/hangovergames/eldoria/internal/common/dtos"
-	"github.com/hangovergames/eldoria/internal/server/apirequests"
-	"github.com/hangovergames/eldoria/internal/server/apiresponses"
 	"github.com/hangovergames/eldoria/internal/server/game/mocks"
 	"testing"
 )
@@ -22,8 +20,8 @@ func TestUIConfig(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			mockResponse := &apiresponses.MockResponse{}
-			mockRequest := &apirequests.MockRequest{IsGet: tt.requestMethod}
+			mockResponse := &mocks.MockResponse{}
+			mockRequest := &mocks.MockRequest{IsGet: tt.requestMethod}
 
 			// Mock Ruleset
 			mockRuleset := new(mocks.MockRuleset)

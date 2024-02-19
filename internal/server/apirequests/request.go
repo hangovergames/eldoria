@@ -3,12 +3,10 @@
 package apirequests
 
 import (
+	"github.com/gorilla/mux"
 	"net/http"
+	"net/url"
 )
-
-type Request interface {
-	IsMethodGet() bool
-}
 
 type RequestImpl struct {
 	request *http.Request
@@ -22,4 +20,12 @@ func NewRequest(
 
 func (request *RequestImpl) IsMethodGet() bool {
 	return request.request.Method == http.MethodGet
+}
+
+func (request *RequestImpl) GetURL() *url.URL {
+	return request.request.URL
+}
+
+func (request *RequestImpl) GetVars() map[string]string {
+	return mux.Vars(request.request)
 }

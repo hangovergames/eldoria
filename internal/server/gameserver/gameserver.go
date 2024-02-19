@@ -4,7 +4,9 @@ package gameserver
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/hangovergames/eldoria/internal/server/api/index"
+	"github.com/hangovergames/eldoria/internal/server/api/players"
 	"github.com/hangovergames/eldoria/internal/server/api/uiconfig"
 	"github.com/hangovergames/eldoria/internal/server/apirequests"
 	"github.com/hangovergames/eldoria/internal/server/apiresponses"
@@ -19,9 +21,6 @@ type Server struct {
 	Ruleset game.IRuleset
 	State   game.IGameState
 }
-
-// HandlerFunc defines the type for handlers in this API.
-type HandlerFunc func(apiresponses.Response, apirequests.Request, game.IServer)
 
 // NewServer creates and initializes a new Server instance.
 func NewServer(
@@ -38,8 +37,11 @@ func NewServer(
 
 // SetupRoutes Define HTTP routes.
 func (s *Server) SetupRoutes() {
-	http.HandleFunc("/", responseHandler(index.Index, s))
-	http.HandleFunc("/ui/config", responseHandler(uiconfig.UIConfig, s))
+	r := mux.NewRouter()
+	r.HandleFunc("/players/{username:[a-z0-9_]+}", responseHandler(players.PlayerCheck, s)).Methods("GET")
+	r.HandleFunc("/ui/config", responseHandler(uiconfig.UIConfig, s)).Methods("GET")
+	r.HandleFunc("/", responseHandler(index.Index, s)).Methods("GET")
+	http.Handle("/", r)
 }
 
 // Start begins listening on the specified port and starts handling incoming requests.
@@ -66,7 +68,7 @@ func (s *Server) GetRuleset() game.IRuleset {
 
 // responseHandler wraps a handler function to inject dependencies.
 func responseHandler(
-	handler HandlerFunc,
+	handler game.RequestHandlerFunc,
 	server game.IServer,
 ) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

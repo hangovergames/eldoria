@@ -1,8 +1,8 @@
 // Copyright (c) 2024. Hangover Games <info@hangover.games>. All rights reserved.
 
-package apiresponses
+package mocks
 
-// MockResponse implements the apiResponses.Response interface
+// MockResponse implements the apiResponses.IResponse interface
 type MockResponse struct {
 	SentData         interface{}
 	SentStatusCode   int

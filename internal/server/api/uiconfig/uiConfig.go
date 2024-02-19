@@ -3,15 +3,13 @@
 package uiconfig
 
 import (
-	"github.com/hangovergames/eldoria/internal/server/apirequests"
-	"github.com/hangovergames/eldoria/internal/server/apiresponses"
 	"github.com/hangovergames/eldoria/internal/server/game"
 	"log"
 	"net/http"
 )
 
 // UIConfig handles the requests for UI configuration data.
-func UIConfig(response apiresponses.Response, request apirequests.Request, server game.IServer) {
+func UIConfig(response game.IResponse, request game.IRequest, server game.IServer) {
 	if !request.IsMethodGet() {
 		response.SendMethodNotSupportedError()
 		return

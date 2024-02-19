@@ -4,6 +4,7 @@ package game
 
 import (
 	"github.com/hangovergames/eldoria/internal/common/dtos"
+	"net/url"
 )
 
 type PlayerID uint
@@ -14,6 +15,12 @@ type TileEffect uint
 // HasTileEffect Function to check if a tile effect includes a specific effect
 func (t TileEffect) HasTileEffect(effect TileEffect) bool {
 	return t&effect != 0
+}
+
+type IResponse interface {
+	Send(statusCode int, data interface{})
+	SendError(statusCode int, error string)
+	SendMethodNotSupportedError()
 }
 
 // IServer defines the methods available from the Server
@@ -97,6 +104,9 @@ type IGameState interface {
 	// GetPlayers returns a list of all players in the game state.
 	GetPlayers() []IPlayer
 
+	// FindPlayer returns a player if it exists
+	FindPlayer(name string) (IPlayer, error)
+
 	// AddPlayer adds a new player to the game state.
 	//AddPlayer(player gamePlayer.Player)
 
@@ -107,3 +117,12 @@ type IGameState interface {
 	//UpdatePlayer(player gamePlayer.Player)
 
 }
+
+type IRequest interface {
+	IsMethodGet() bool
+	GetURL() *url.URL
+	GetVars() map[string]string
+}
+
+// RequestHandlerFunc defines the type for handlers in this API.
+type RequestHandlerFunc func(IResponse, IRequest, IServer)

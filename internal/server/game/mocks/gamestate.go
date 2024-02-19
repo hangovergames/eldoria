@@ -23,3 +23,9 @@ func (m *MockGameState) GetPlayers() []game.IPlayer {
 	args := m.Called()
 	return args.Get(0).([]game.IPlayer) // Ensure to return the correct type.
 }
+
+// FindPlayer mocks the GetPlayer method.
+func (m *MockGameState) FindPlayer(name string) (game.IPlayer, error) {
+	args := m.Called(name)
+	return args.Get(0).(game.IPlayer), args.Get(1).(error)
+}
