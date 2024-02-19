@@ -10,7 +10,7 @@ from the date of each software release distributed under this license ('Release
 Date'). After this two-year period, the terms of this license will automatically 
 transition to the MIT License, allowing for broader usage rights, including 
 commercial use. However, notwithstanding any other provisions of this license, 
-Heusala Group Ltd (hereinafter referred to as 'HG') and any entities owning a 
+Hangover Games (hereinafter referred to as 'HG') and any entities owning a 
 part of it, including but not limited to individual owners and business entities, 
 are granted the right to use the software for commercial purposes at any time 
 without requiring additional permission from HG. 'Non-commercial use' is defined 
